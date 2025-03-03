@@ -1,40 +1,68 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const Stack = createNativeStackNavigator();
 
 export default function FirstScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <Image
         style={styles.image}
         source={require("../assets/SherlockTitre.png")}
         resizeMode="contain"
       />
       <View style={styles.buttoncontainer}>
-        <Text>
+        <Text style={styles.title}>
           Bienvenue sur Sherlock! Sherlock et Watson vous aideront à ranger et à
           retrouver vos objets
         </Text>
-        <Button
+        <TouchableOpacity
           style={styles.button}
-          title="Créer un compte"
-          onPress={() => navigation.navigate("Login")}
-        />
-        <Button
-          style={styles.button}
-          title="Se connecter"
           onPress={() => navigation.navigate("Signin")}
-        />
-        <Button
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButton}>Créer un compte</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          //   title="Se connecter"
+          onPress={() => navigation.navigate("Login")}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButton}>Se connecter</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           style={styles.googlebutton}
-          title="Continuer avec Google"
+          //   title="Continuer avec Google"
           onPress={() => navigation.navigate("Profile")}
-        />
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textgoogleButton}>
+            <Image
+              style={styles.imageButton}
+              source={require("../assets/image 2.png")}
+              resizeMode="contain"
+            />
+            Continuer avec Google
+          </Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -45,24 +73,45 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     fontcolor: "white",
+    width: "100%",
+    height: "100%",
+  },
+  title: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "odor",
+    marginBottom: 20,
+    textAlign: "center",
   },
   image: {
     width: 350,
     height: 200,
+    marginTop: 10,
+  },
+  imageButton: {
+    width: 30,
+    height: 30,
   },
   buttoncontainer: {
     flex: 1,
     backgroundColor: "#8D6C50",
-    alignItems: "center",
+    alignItems: "justify",
     justifyContent: "center",
     fontcolor: "white",
+    borderRadius: 10,
+    width: "90%",
+    padding: 10,
+    marginBottom: 40,
   },
   button: {
     backgroundColor: "#392A1D",
     alignItems: "center",
     justifyContent: "center",
-    fontcolor: "white",
+    // fontcolor: "white",
     borderRadius: 10,
+    padding: 8,
+    margin: 10,
+    height: 80,
   },
   googlebutton: {
     backgroundColor: "white",
@@ -70,5 +119,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontcolor: "black",
     borderRadius: 10,
+    // padding: 8,
+    margin: 10,
+    height: 50,
+    marginTop: 40,
+  },
+  textButton: {
+    color: "white",
+    fontSize: 26,
+    fontWeight: "600",
+  },
+  textgoogleButton: {
+    color: "black",
+    fontSize: 20,
+    fontWeight: "600",
+    paddingBottom: 10,
   },
 });
