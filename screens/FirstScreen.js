@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -21,12 +21,12 @@ export default function FirstScreen({ navigation }) {
         <Button
           style={styles.button}
           title="Créer un compte"
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => navigation.navigate("Signin")}
         />
         <Button
           style={styles.button}
           title="Se connecter"
-          onPress={() => navigation.navigate("Signin")}
+          onPress={() => navigation.navigate("Login")}
         />
         <Button
           style={styles.googlebutton}
