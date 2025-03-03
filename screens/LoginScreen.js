@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   image: {
     width: 350,
     height: 350,
-    marginTop: -300,
+    marginTop: -200,
   },
   buttonConnexion: {
     color: '#ffffff',
