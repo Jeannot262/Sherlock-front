@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   View,
   Text,
-  Button,
   StyleSheet,
   Image,
   KeyboardAvoidingView,
@@ -73,8 +72,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     fontcolor: "white",
-    width: "100%",
-    height: "100%",
   },
   title: {
     color: "white",
