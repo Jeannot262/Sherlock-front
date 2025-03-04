@@ -32,14 +32,13 @@ export default function FirstScreen({ navigation }) {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Signin")}
+          onPress={() => navigation.navigate("SignUp")}
           activeOpacity={0.8}
         >
           <Text style={styles.textButton}>Créer un compte</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          //   title="Se connecter"
           onPress={() => navigation.navigate("Login")}
           activeOpacity={0.8}
         >
@@ -47,7 +46,6 @@ export default function FirstScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.googlebutton}
-          //   title="Continuer avec Google"
           onPress={() => navigation.navigate("Profile")}
           activeOpacity={0.8}
         >
