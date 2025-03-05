@@ -8,9 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +30,7 @@ export default function FirstScreen({ navigation }) {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("SignUp")}
+          onPress={() => navigation.navigate("Signup")}
           activeOpacity={0.8}
         >
           <Text style={styles.textButton}>Créer un compte</Text>

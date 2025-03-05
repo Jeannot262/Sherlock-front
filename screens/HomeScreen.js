@@ -11,9 +11,6 @@ import {
   FlatList,
   Animated,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -21,6 +18,8 @@ const images = [
   require("../assets/cable-ethernet.jpg"),
   require("../assets/jumelles.jpg"),
   require("../assets/clefs.jpg"),
+  require("../assets/medicaments.jpg"),
+  require("../assets/bijoux.jpg"),
 ];
 
 export default function HomeScreen({ navigation }) {
@@ -32,14 +31,11 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (autoScroll.current && flatListRef.current) {
+        currentIndex.current = (currentIndex.current + 1) % images.length;
         flatListRef.current.scrollToIndex({
           index: currentIndex.current,
           animated: true,
         });
-        currentIndex.current =
-          currentIndex.current === images.length - 1
-            ? 0
-            : currentIndex.current + 1;
       }
     }, 3000);
 
@@ -51,7 +47,7 @@ export default function HomeScreen({ navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View>
+      <View style={styles.headerContainer}>
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={() => navigation.navigate("Logout")}
@@ -64,6 +60,13 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/SherlockTitre.png")}
           resizeMode="contain"
         />
+        <TouchableOpacity
+          style={styles.accountButton}
+          onPress={() => navigation.navigate("Account")}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textAccountButton}>Account</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.carouselcontainer}>
         <FlatList
@@ -71,21 +74,48 @@ export default function HomeScreen({ navigation }) {
           data={images}
           keyExtractor={(_, index) => index.toString()}
           horizontal
-          pagingEnabled
           showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToAlignment="center"
+          snapToInterval={screenWidth * 0.7}
+          contentContainerStyle={{
+            paddingHorizontal: (screenWidth - screenWidth * 0.7) / 2,
+          }}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
             { useNativeDriver: false }
           )}
-          renderItem={({ item }) => (
-            <View style={styles.carouselItem}>
-              <Image
-                source={item}
-                style={styles.carouselImage}
-                resizeMode="cover"
-              />
-            </View>
-          )}
+          onTouchStart={() => (autoScroll.current = false)}
+          onMomentumScrollEnd={() => (autoScroll.current = true)}
+          renderItem={({ item, index }) => {
+            const inputRange = [
+              (index - 1) * screenWidth * 0.7,
+              index * screenWidth * 0.7,
+              (index + 1) * screenWidth * 0.7,
+            ];
+            const scale = scrollX.interpolate({
+              inputRange,
+              outputRange: [0.8, 1.2, 0.8],
+              extrapolate: "clamp",
+            });
+            const opacity = scrollX.interpolate({
+              inputRange,
+              outputRange: [0.5, 1, 0.5],
+              extrapolate: "clamp",
+            });
+            return (
+              <View style={styles.carouselItem}>
+                <Animated.Image
+                  source={item}
+                  style={[
+                    styles.carouselImage,
+                    { transform: [{ scale }], opacity },
+                  ]}
+                  resizeMode="cover"
+                />
+              </View>
+            );
+          }}
         />
       </View>
       <View style={styles.buttoncontainer}>
@@ -101,28 +131,32 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate("Prets")}
           activeOpacity={0.8}
         >
-          <Text style={styles.textButton}>
-            Mes prêts
-            <Image
-              style={styles.imageButton}
-              source={require("../assets/smoking-pipe.png")}
-              resizeMode="contain"
-            />
-          </Text>
+          <View style={styles.buttonContent}>
+            <Text style={styles.textButton}>
+              Mes prêts
+              <Image
+                style={styles.imageButton}
+                source={require("../assets/smoking-pipe.png")}
+                resizeMode="center"
+              />
+            </Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.PartageButton}
           onPress={() => navigation.navigate("Partager")}
           activeOpacity={0.8}
         >
-          <Text style={styles.textButton}>
-            Partager avec Watson
-            <Image
-              style={styles.imageButton}
-              source={require("../assets/black-hat.png")}
-              resizeMode="contain"
-            />
-          </Text>
+          <View style={styles.buttonContent}>
+            <Text style={styles.textButton}>
+              Partager avec Watson
+              <Image
+                style={styles.imageButton}
+                source={require("../assets/black-hat.png")}
+                resizeMode="center"
+              />
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -130,8 +164,50 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 20,
+    marginTop: 20,
+    marginLeft: 10,
+    borderBottomColor: "#000000",
+    borderBottomWidth: 1,
+  },
+  logoutButton: {
+    backgroundColor: "#392A1D",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    // padding: 8,
+    marginTop: 10,
+    height: 40,
+    width: 100,
+  },
+  logo: {
+    width: 225,
+    height: 75,
+    marginTop: 10,
+  },
+  accountButton: {
+    backgroundColor: "#392A1D",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    // padding: 8,
+    marginTop: 10,
+    height: 60,
+    width: 60,
+    // marginRight: 30,
+  },
+  textAccountButton: {
+    fontSize: 10,
+    color: "white", //"#E9B78E",
+    fontWeight: "bold",
+  },
   carouselcontainer: {
-    height: 200,
+    height: 220,
     width: "90%",
     backgroundColor: "#9E6D52",
     alignItems: "center",
@@ -141,14 +217,16 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   carouselItem: {
-    width: screenWidth * 0.6,
+    width: screenWidth * 0.7,
     borderRadius: 10,
-    overflow: "hidden",
-    marginHorizontal: (screenWidth * 0.1) / 2,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    marginLeft: 10,
   },
   carouselImage: {
-    width: "100%",
-    height: "90%",
+    width: "90%",
+    height: 150,
     borderRadius: 10,
   },
   container: {
@@ -193,7 +271,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 8,
     margin: 10,
-    height: 80,
+    marginBottom: 40,
+    height: 90,
+    // flexDirection: "row",
   },
 
   textButton: {
@@ -210,14 +290,9 @@ const styles = StyleSheet.create({
     margin: 10,
     height: 80,
   },
-  logoutButton: {
-    backgroundColor: "#392A1D",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    // padding: 8,
-    // margin: 10,
-    height: 50,
-    width: 100,
-  },
+  // buttonContent: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
 });
