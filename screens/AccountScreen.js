@@ -14,19 +14,6 @@ export default function LoginScreen({ navigation }) {
      <Image style={styles.image} source={require('../assets/SherlockTitre.png')} resizeMode="contain"/>
 
      <View style={styles.squareContainer}>
-     <TextInput
-        style={styles.username}
-        placeholder="Nom d'utilisateur..."
-        value={username}
-        onChangeText={setUsername}
-      />
-       <TextInput
-        style={styles.password}
-        placeholder="Mot de passe..."
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
 
 {/* Button Menu à droite *login4* */}
 
