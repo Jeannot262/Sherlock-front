@@ -15,19 +15,11 @@ export default function LoginScreen({ navigation }) {
 
      <View style={styles.squareContainer}>
 
-{/* Button Menu à droite *login4* */}
-
-
-
-
-
-
-
 {/* Button Home */}
       <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonRetour}>Retour</Text>
+        style={styles.homeButton}
+        onPress={() => navigation.goBack('Home')}>
+        <Text style={styles.buttonHome}>Home</Text>
       </TouchableOpacity>
 
 {/* Button Modifier le mot de passe  */}
@@ -46,7 +38,7 @@ export default function LoginScreen({ navigation }) {
 
 {/* Button Supp le compte */}
       <TouchableOpacity 
-        style={styles.button} 
+        style={styles.suppbutton} 
         onPress={() => navigation.navigate('First')}>
         <Text style={styles.buttonModifier}>Supprimer le compte</Text>
       </TouchableOpacity>
@@ -71,23 +63,31 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   image: {
-    width: 350,
-    height: 350,
-    marginBottom: -80,
-    marginTop: -50,
+    width: 225,
+    height: 80,
+    marginTop: 30,
   },
   buttonModifier: {
     color: '#ffffff',
     height: 50,
     fontWeight: '600',
-    fontSize: 25,
+    fontSize: 20,
   },
   button: {
     alignItems: 'center',
       paddingTop: 20,
-      width: '55%',
+      width: '85%',
       marginTop: 30,
       backgroundColor: '#392A1D',
+      borderRadius: 10,
+      marginBottom: 20,
+  },
+  suppbutton: {
+    alignItems: 'center',
+      paddingTop: 20,
+      width: '85%',
+      marginTop: 30,
+      backgroundColor: '#9F6D52',
       borderRadius: 10,
       marginBottom: 20,
   },
@@ -113,11 +113,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '90%',
     alignItems: 'center',
+    marginTop: 50,
   },
   backButton: {
-    position: 'absolute',
-    bottom: '-70%',
-    left: -10,
+    bottom: '-40%',
+    right: 130,
     backgroundColor: '#392A1D',
     paddingHorizontal: 5,
     paddingVertical: 10,
@@ -127,4 +127,16 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 18,
   },
+  homeButton: {
+    top: -145,
+    right: 130,
+    backgroundColor: '#392A1D',
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  buttonHome: {
+    color: '#ffffff',
+    fontSize: 18,
+  }
 });
