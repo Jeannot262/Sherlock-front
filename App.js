@@ -5,15 +5,19 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
+import object from "./reducers/object";
+import objectList from "./reducers/objectList";
 
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import FirstScreen from "./screens/FirstScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import ObjectListScreen from "./screens/ObjectListScreen";
+import ObjectScreen from "./screens/ObjectScreen";
+import NewObjectScreen from "./screens/NewObjectScreen"
 
 const store = configureStore({
-  reducer : {user},
+  reducer : {user, object, objectList},
 });
 
 const Stack = createNativeStackNavigator();
@@ -22,15 +26,14 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{ headerShown: false }}
-          initialRouteName="First"
-        >
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="First">
           <Stack.Screen name="First" component={FirstScreen} />
           <Stack.Screen name = "SignUp" component={SignUpScreen}/>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name = "MyObjects" component={ObjectListScreen}/>
+          <Stack.Screen name = "Object" component={ObjectScreen}/>
+          <Stack.Screen name = "NewObject" component={NewObjectScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

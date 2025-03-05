@@ -14,7 +14,7 @@ export default function SignUpScreen({ navigation }) {
   const signupButtonClicked = () =>{
     if(password === confirmedPassword)
     {
-        fetch("http://192.168.1.30:3000/users/signup", {
+        fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/signup`, {
           method : "POST",
           headers : { "Content-Type" : "application/json"},
           body : JSON.stringify({username : username, password : password})

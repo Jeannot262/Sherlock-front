@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'reac
 import {Button, Provider, Tooltip} from "@ant-design/react-native";
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUser, updateObjectList } from '../reducers/user';
+import { updateUser } from '../reducers/user';
 
 export default function LoginScreen({ navigation }) {
 
@@ -12,7 +12,7 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
 
   const loginButtonClicked = () =>{
-    fetch("http://192.168.1.30:3000/users/login", {
+    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/login`, {
       method : "POST",
       headers : { "Content-Type" : "application/json"},
       body : JSON.stringify({username : username, password : password})
@@ -21,22 +21,10 @@ export default function LoginScreen({ navigation }) {
     .then(data => {
       if(data.result)
       {
-        dispatch(updateUser({username : data.connectedUser.username, password : password}));
+        dispatch(updateUser({_id : data.connectedUser._id, username : data.connectedUser.username, password : password}));
         setUsername("");
         setPassword("");
         navigation.navigate("MyObjects");
-        fetch(`http://192.168.1.30:3000/objects/findUserObject/${data.connectedUser._id}`)
-          .then(response => response.json())
-          .then(newData => {
-            if(newData.result)
-            {
-              dispatch(updateObjectList(newData.objectList));
-            }
-            else
-            {
-              console.log("ERROR");
-            }
-        })
       }
       else
       {
