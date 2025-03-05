@@ -11,9 +11,10 @@ import LoginScreen from "./screens/LoginScreen";
 import FirstScreen from "./screens/FirstScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import ObjectListScreen from "./screens/ObjectListScreen";
+import SharedScreen from "./screens/SharedScreen";
 
 const store = configureStore({
-  reducer : {user},
+  reducer: { user },
 });
 
 const Stack = createNativeStackNavigator();
@@ -27,10 +28,11 @@ export default function App() {
           initialRouteName="First"
         >
           <Stack.Screen name="First" component={FirstScreen} />
-          <Stack.Screen name = "SignUp" component={SignUpScreen}/>
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name = "MyObjects" component={ObjectListScreen}/>
+          <Stack.Screen name="MyObjects" component={ObjectListScreen} />
+          <Stack.Screen name="Shared" component={SharedScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

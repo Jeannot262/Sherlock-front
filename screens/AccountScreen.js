@@ -1,74 +1,82 @@
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, TextInput } from 'react-native';
-import React, { useState } from 'react';
-
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import React, { useState } from "react";
 
 export default function LoginScreen({ navigation }) {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleLogin = () => {
-        navigation.navigate('Home');
+  const handleLogin = () => {
+    navigation.navigate("Home");
   };
   return (
     <View style={styles.container}>
-     <Image style={styles.image} source={require('../assets/SherlockTitre.png')} resizeMode="contain"/>
+      <Image
+        style={styles.image}
+        source={require("../assets/SherlockTitre.png")}
+        resizeMode="contain"
+      />
 
-     <View style={styles.squareContainer}>
+      <View style={styles.squareContainer}>
+        {/* Button Menu à droite *login4* */}
 
-{/* Button Menu à droite *login4* */}
+        {/* Button Home */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonRetour}>Retour</Text>
+        </TouchableOpacity>
 
+        {/* Button Modifier le mot de passe  */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("")}
+        >
+          <Text style={styles.buttonModifier}>Modifier votre mot de passe</Text>
+        </TouchableOpacity>
 
+        {/* Button Modifier la langue */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("")}
+        >
+          <Text style={styles.buttonModifier}>Modifier la langue</Text>
+        </TouchableOpacity>
 
+        {/* Button Supp le compte */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("First")}
+        >
+          <Text style={styles.buttonModifier}>Supprimer le compte</Text>
+        </TouchableOpacity>
 
-
-
-
-{/* Button Home */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonRetour}>Retour</Text>
-      </TouchableOpacity>
-
-{/* Button Modifier le mot de passe  */}
-     <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigation.navigate('')}>
-        <Text style={styles.buttonModifier}>Modifier votre mot de passe</Text>
-      </TouchableOpacity>
-
-{/* Button Modifier la langue */}
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigation.navigate('')}>
-        <Text style={styles.buttonModifier}>Modifier la langue</Text>
-      </TouchableOpacity>
-
-{/* Button Supp le compte */}
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigation.navigate('First')}>
-        <Text style={styles.buttonModifier}>Supprimer le compte</Text>
-      </TouchableOpacity>
-
-{/* Button Retour */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonRetour}>Retour</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Button Retour */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonRetour}>Retour</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
-    backgroundColor: '#E9B78E',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    backgroundColor: "#E9B78E",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   image: {
     width: 350,
@@ -77,54 +85,54 @@ const styles = StyleSheet.create({
     marginTop: -50,
   },
   buttonModifier: {
-    color: '#ffffff',
+    color: "#ffffff",
     height: 50,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 25,
   },
   button: {
-    alignItems: 'center',
-      paddingTop: 20,
-      width: '55%',
-      marginTop: 30,
-      backgroundColor: '#392A1D',
-      borderRadius: 10,
-      marginBottom: 20,
+    alignItems: "center",
+    paddingTop: 20,
+    width: "55%",
+    marginTop: 30,
+    backgroundColor: "#392A1D",
+    borderRadius: 10,
+    marginBottom: 20,
   },
   username: {
-    textAlign: 'left',
-    backgroundColor: '#ffff',
+    textAlign: "left",
+    backgroundColor: "#ffff",
     borderRadius: 10,
-    width: '87%',
+    width: "87%",
     paddingTop: 20,
     marginBottom: 20,
   },
   password: {
-    textAlign: 'left',
-    backgroundColor: '#ffff',
+    textAlign: "left",
+    backgroundColor: "#ffff",
     borderRadius: 10,
-    width: '87%',
+    width: "87%",
     paddingTop: 20,
     marginBottom: 20,
   },
   squareContainer: {
-    backgroundColor: '#8D6C50',
+    backgroundColor: "#8D6C50",
     paddingVertical: 45,
     borderRadius: 10,
-    width: '90%',
-    alignItems: 'center',
+    width: "90%",
+    alignItems: "center",
   },
   backButton: {
-    position: 'absolute',
-    bottom: '-70%',
+    position: "absolute",
+    bottom: "-70%",
     left: -10,
-    backgroundColor: '#392A1D',
+    backgroundColor: "#392A1D",
     paddingHorizontal: 5,
     paddingVertical: 10,
     borderRadius: 10,
   },
   buttonRetour: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 18,
   },
 });
