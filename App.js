@@ -16,6 +16,7 @@ import ObjectListScreen from "./screens/ObjectListScreen";
 import ObjectScreen from "./screens/ObjectScreen";
 import NewObjectScreen from "./screens/NewObjectScreen"
 import SharedScreen from "./screens/SharedScreen";
+import CameraScreen from "./screens/CameraScreen";
 
 const store = configureStore({
   reducer : {user, object, objectList},
@@ -36,6 +37,7 @@ export default function App() {
           <Stack.Screen name = "MyObjects" component={ObjectListScreen}/>
           <Stack.Screen name = "Object" component={ObjectScreen}/>
           <Stack.Screen name = "NewObject" component={NewObjectScreen}/>
+          <Stack.Screen name = "CameraScreen" component={CameraScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
