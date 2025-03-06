@@ -43,7 +43,7 @@ export default function FirstScreen({ navigation }) {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Signup")}
+          onPress={() => navigation.navigate("SignUp")}
           activeOpacity={0.8}
         >
           <Text style={styles.textButton}>Créer un compte</Text>
