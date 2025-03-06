@@ -6,70 +6,124 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogin = () => {
     navigation.navigate("Home");
   };
   return (
     <View style={styles.container}>
+      
+      {/* Image du titre */}
       <Image
         style={styles.image}
         source={require("../assets/SherlockTitre.png")}
         resizeMode="contain"
       />
+      
+      {/* Bouton pour ouvrir le menu */}
+      <TouchableOpacity 
+        onPress={() => setModalVisible(true)} 
+        style={styles.menuButton}>
 
+        <Text style={styles.menuText}>☰</Text>
+      </TouchableOpacity>
+  
+      {/* Burger Menu */}
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+
+        <TouchableOpacity 
+          style={styles.overlay} 
+          onPress={() => setModalVisible(false)}>
+
+          <View style={styles.menuContainer}>
+            
+            {/* Titre du menu */}
+            <Text style={styles.menuTitle}>Menu</Text>
+            
+            {/* Items du menu */}
+            <TouchableOpacity 
+              style={styles.menuItem} 
+              onPress={() => navigation.goBack("NewObjet")}>
+
+              <Text style={styles.menuItemText}>Nouvel objet</Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity 
+              style={styles.menuItem} 
+              onPress={() => navigation.goBack("")}>
+
+              <Text style={styles.menuItemText}>Mes prêts</Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity 
+              style={styles.menuItem} 
+              onPress={() => navigation.goBack("Account")}>
+
+              <Text style={styles.menuItemText}>Mon compte</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+  
+      {/* Section des boutons */}
       <View style={styles.squareContainer}>
-        {/* Button Menu à droite *login4* */}
-
-        {/* Button Home */}
-        <TouchableOpacity
-          style={styles.homeButton}
+        
+        {/* Bouton Home */}
+        <TouchableOpacity 
+          style={styles.homeButton} 
           onPress={() => navigation.goBack("Home")}
         >
           <Text style={styles.buttonHome}>Home</Text>
         </TouchableOpacity>
-
-        {/* Button Modifier le mot de passe  */}
-        <TouchableOpacity
-          style={styles.button}
+  
+        {/* Bouton Modifier le mot de passe */}
+        <TouchableOpacity 
+          style={styles.button} 
           onPress={() => navigation.navigate("")}
         >
           <Text style={styles.buttonModifier}>Modifier votre mot de passe</Text>
         </TouchableOpacity>
-
-        {/* Button Modifier la langue */}
-        <TouchableOpacity
-          style={styles.button}
+  
+        {/* Bouton Modifier la langue */}
+        <TouchableOpacity 
+          style={styles.button} 
           onPress={() => navigation.navigate("")}
         >
           <Text style={styles.buttonModifier}>Modifier la langue</Text>
         </TouchableOpacity>
-
-        {/* Button Supp le compte */}
-        <TouchableOpacity
-          style={styles.suppbutton}
+  
+        {/* Bouton Supprimer le compte */}
+        <TouchableOpacity 
+          style={styles.suppbutton} 
           onPress={() => navigation.navigate("First")}
         >
           <Text style={styles.buttonModifier}>Supprimer le compte</Text>
         </TouchableOpacity>
-
-        {/* Button Retour */}
-        <TouchableOpacity
-          style={styles.backButton}
+  
+        {/* Bouton Retour */}
+        <TouchableOpacity 
+          style={styles.backButton} 
           onPress={() => navigation.goBack()}
         >
           <Text style={styles.buttonRetour}>Retour</Text>
         </TouchableOpacity>
       </View>
+      
     </View>
   );
-}
+}  
 
 const styles = StyleSheet.create({
   container: {
@@ -78,6 +132,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+  menuContainer: {
+    position: "absolute",
+    top: 50,
+    right: 10,
+    backgroundColor: "#392A1D",
+    width: 150,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },  
   image: {
     width: 225,
     height: 80,
@@ -154,5 +222,26 @@ const styles = StyleSheet.create({
   buttonHome: {
     color: "#ffffff",
     fontSize: 18,
+  },
+  menuButton: {
+    position: "absolute",
+    top: 65,
+    right: 35,
+  },
+  menuText: {
+    fontSize: 24,
+  },
+  menuTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 10,
+  },
+  menuItem: {
+    paddingVertical: 8,
+  },
+  menuItemText: {
+    fontSize: 14,
+    color: "white",
   },
 });
