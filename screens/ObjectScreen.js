@@ -35,7 +35,9 @@ export default function ObjectScreen({navigation}) {
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.text}>Photo</Text>
-                        <Image style={styles.image} source={require("../assets/placeholder.png")}/>
+                        <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate("CameraScreen")}>
+                            <Image style={styles.image} source={require("../assets/placeholder.png")}/>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.column}>
                         <Text style={styles.text}>Description</Text>
@@ -160,11 +162,17 @@ const styles = StyleSheet.create({
         marginTop : 10,
     },
 
+    imageContainer : {
+        width : 180,
+        height : 180,
+        // borderWidth : 10,
+        // borderColor : "red",
+        marginVertical : 30,
+    },
+
     image : {
         width : 180,
         height : 180,
         borderRadius : 10,
-        marginBottom : 20,
-        marginTop : 20,
     },
 });
