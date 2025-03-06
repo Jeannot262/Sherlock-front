@@ -24,12 +24,10 @@ export const objectSlice = createSlice({
       console.log(state.value);
     },
     addPhoto: (state, action) => {
-      state.value.photos.push(action.payload);
+      state.value.picture = action.payload;
     },
     removePhoto: (state, action) => {
-      state.value.photos = state.value.photos.filter(
-        (data) => data !== action.payload
-      );
+      state.value.picture = "";
     },
   },
 });
