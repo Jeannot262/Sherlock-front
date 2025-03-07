@@ -5,7 +5,6 @@ import {
   Button,
   Image,
   TouchableOpacity,
-  TextInput,
   Modal,
 } from "react-native";
 import React, { useState } from "react";
