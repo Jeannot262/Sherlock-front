@@ -1,15 +1,20 @@
 import { StyleSheet, Switch, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {Button} from "@ant-design/react-native";
 
+import { addPhoto } from "../reducers/object";
+
 export default function NewObjectScreen({navigation}) {
-    const user = useSelector((state) => state.user.value); 
-    
+    const user = useSelector((state) => state.user.value);
+    const object = useSelector((state) => state.object.value);  
+    const dispatch = useDispatch();
+
     const [name, setName] = useState("");
+    const [picture, setPicture] = useState("");
     const [description, setDescription] = useState("");
     const [loaned, setLoaned] = useState(false);
     const [loanedTo, setLoanedTo] = useState("")
@@ -22,7 +27,7 @@ export default function NewObjectScreen({navigation}) {
         fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/addObject`, {
             method : "POST",
             headers : {"Content-Type" : "application/json"},
-            body : JSON.stringify({name : name, picture : "", description : description, owner : user._id, loanedTo : loanedTo})
+            body : JSON.stringify({name : name, picture : picture, description : description, owner : user._id, loanedTo : loanedTo})
         })
         .then(response => response.json())
         .then(data => {
@@ -35,6 +40,10 @@ export default function NewObjectScreen({navigation}) {
                 console.log("Something went wrong!");
             }
         })
+    };
+
+    const addPicture = () => {
+        dispatch(addPhoto())
     };
     
     return (
@@ -104,7 +113,7 @@ export default function NewObjectScreen({navigation}) {
                     </TextInput>}
                 </SafeAreaView>
                 <SafeAreaView style={styles.bottomBar} edges={[]}>
-                    <Button style={styles.backButton} onPress={() => navigation.navigate("Login")}>
+                    <Button style={styles.backButton} onPress={() => navigation.navigate("MyObjects")}>
                         <FontAwesome name='arrow-left' size={25} color="white"/>
                     </Button>
                     <Button style={styles.validateButton} onPress={() => addObject()}>

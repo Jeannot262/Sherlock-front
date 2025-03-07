@@ -7,7 +7,7 @@ const initialState = {
     description: null,
     loanedTo: null,
     sharedWith: null,
-    owwner: null,
+    owner: null,
   },
 };
 
@@ -21,9 +21,11 @@ export const objectSlice = createSlice({
       state.value.description = action.payload.description;
       state.value.loanedTo = action.payload.loanedTo;
       state.value.sharedWith = action.payload.sharedWith;
+      state.value.owner = action.payload.owner;
       console.log(state.value);
     },
     addPhoto: (state, action) => {
+      console.log(action.payload)
       state.value.picture = action.payload;
     },
     removePhoto: (state, action) => {
