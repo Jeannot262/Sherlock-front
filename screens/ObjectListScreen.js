@@ -11,14 +11,18 @@ import {
 
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@ant-design/react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 import { useDispatch, useSelector } from "react-redux";
 import { createObjectList } from "../reducers/objectList";
+import { updateObject } from "../reducers/object";
 
 export default function ObjectListScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
+  const tempObjectList = useSelector((state) =>state.objectList.value);
   const [objectList, setObjectList] = useState([]);
+  //const [objectDisplayed, setObjectDisplayed] = useState([]);
   const object = useSelector((state) => state.object.value);
   const photo = object.picture;
 
@@ -35,7 +39,7 @@ export default function ObjectListScreen({ navigation }) {
           console.log("ERROR");
         }
       });
-  }, []);
+  }, [tempObjectList]);
 
   let objectsDisplayed;
   if (objectList !== null) {
@@ -44,17 +48,27 @@ export default function ObjectListScreen({ navigation }) {
         <TouchableOpacity
           key={i}
           style={styles.objectContainer}
-          onPress={() => navigation.navigate("Object")}
-        >
+          onPress={() => {
+            navigation.navigate("Object");
+            dispatch(updateObject({
+              name : data.name,
+              picture : data.picture,
+              description : data.description,
+              loanedTo : data.loanedTo,
+              sharedWith : data.sharedWith,
+              owner : data.owner}));
+            }}>
           <View>
             <Text style={styles.objectName}>{data.name}</Text>
             <Text style={styles.objectDescription}>{data.description}</Text>
           </View>
-          <Image style={styles.image} source={{ uri: photo }} />
+          <Image style={styles.image} source={data.picture} />
+          {data.loanedTo !== "" ? <Image style={styles.pipe} source={require("../assets/smoking-pipe.png")}/> : <></>}
         </TouchableOpacity>
       );
     });
-  } else {
+  } 
+  else {
     objectsDisplayed = (
       <View>
         <Text>You haven't stored any object yet!</Text>
@@ -98,10 +112,8 @@ export default function ObjectListScreen({ navigation }) {
             <Text style={styles.objectName}>+</Text>
           </Button>
           <Button
-            style={styles.addButton}
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={styles.objectName}>Back</Text>
+            style={styles.addButton} onPress={() => navigation.navigate("Login")}>
+            <FontAwesome name='arrow-left' size={25} color="white"/>
           </Button>
         </View>
       </SafeAreaProvider>
@@ -210,5 +222,13 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 10,
+  },
+
+  pipe : {
+    position : "absolute",
+    width : 45,
+    height : 45,
+    marginTop : 95,
+    marginLeft : 310
   },
 });
