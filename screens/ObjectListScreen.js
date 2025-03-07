@@ -13,6 +13,8 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@ant-design/react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { createObjectList } from "../reducers/objectList";
 import { updateObject } from "../reducers/object";
@@ -40,6 +42,23 @@ export default function ObjectListScreen({ navigation }) {
         }
       });
   }, [tempObjectList]);
+
+  const handleDelete = (objectId) => {
+    fetch(
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteObject/${user._id}/${objectId}`,
+      {
+        method: "DELETE",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setObjectList(objectList.filter((obj) => obj._id !== objectId));
+        } else {
+          console.log("ERROR");
+        }
+      });
+  };
 
   let objectsDisplayed;
   if (objectList !== null) {
@@ -100,6 +119,7 @@ export default function ObjectListScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <SafeAreaView style={styles.objectPanel}>
+          <Text style={styles.title}>Mes objets</Text>
           <ScrollView showsVerticalScrollIndicator={true}>
             {objectsDisplayed}
           </ScrollView>
@@ -192,6 +212,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
+  objectInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "90%",
+  },
+
   bottomBar: {
     flexDirection: "row-reverse",
     width: "100%",
@@ -231,4 +258,13 @@ const styles = StyleSheet.create({
     marginTop : 95,
     marginLeft : 310
   },
+
+  title: {
+    color: "white",
+    fontSize: 35,
+    fontWeight: "odor",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  
 });

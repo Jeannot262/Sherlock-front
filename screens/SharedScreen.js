@@ -39,15 +39,6 @@ export default function SharedScreen({ navigation }) {
           source={require("../assets/SherlockTitre.png")}
           resizeMode="contain"
         />
-
-        {/* <TouchableOpacity
-          style={styles.accountButton}
-          onPress={() => navigation.navigate("Account")}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textAccountButton}>Account</Text>
-        </TouchableOpacity>
-       */}
       </View>
       <Text style={styles.title}>Que Voulez vous partager?</Text>
       <Image
