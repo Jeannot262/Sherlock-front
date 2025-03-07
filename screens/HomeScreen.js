@@ -20,6 +20,7 @@ const images = [
   require("../assets/clefs.jpg"),
   require("../assets/medicaments.jpg"),
   require("../assets/bijoux.jpg"),
+  require("../assets/perceuse.jpg"),
 ];
 
 export default function HomeScreen({ navigation }) {
@@ -44,7 +45,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <View style={styles.headerContainer}>
@@ -121,14 +122,14 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.buttoncontainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Objets")}
+          onPress={() => navigation.navigate("MyObjects")}
           activeOpacity={0.8}
         >
           <Text style={styles.textButton}>Mes objets</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Prets")}
+          onPress={() => navigation.navigate("Shared")}
           activeOpacity={0.8}
         >
           <View style={styles.buttonContent}>
@@ -144,7 +145,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.PartageButton}
-          onPress={() => navigation.navigate("Partager")}
+          onPress={() => navigation.navigate("Shared")}
           activeOpacity={0.8}
         >
           <View style={styles.buttonContent}>
