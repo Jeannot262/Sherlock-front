@@ -11,7 +11,8 @@ import {
 
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@ant-design/react-native";
-
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { createObjectList } from "../reducers/objectList";
 
@@ -37,21 +38,42 @@ export default function ObjectListScreen({ navigation }) {
       });
   }, []);
 
+  const handleDelete = (objectId) => {
+    fetch(
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteObject/${user._id}/${objectId}`,
+      {
+        method: "DELETE",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setObjectList(objectList.filter((obj) => obj._id !== objectId));
+        } else {
+          console.log("ERROR");
+        }
+      });
+  };
+
   let objectsDisplayed;
   if (objectList !== null) {
     objectsDisplayed = objectList.map((data, i) => {
       return (
-        <TouchableOpacity
-          key={i}
-          style={styles.objectContainer}
-          onPress={() => navigation.navigate("Object")}
-        >
-          <View>
-            <Text style={styles.objectName}>{data.name}</Text>
-            <Text style={styles.objectDescription}>{data.description}</Text>
-          </View>
-          <Image style={styles.image} source={{ uri: photo }} />
-        </TouchableOpacity>
+        <View key={i} style={styles.objectContainer}>
+          <TouchableOpacity
+            style={styles.objectInfo}
+            onPress={() => navigation.navigate("Object")}
+          >
+            <View>
+              <Text style={styles.objectName}>{data.name}</Text>
+              <Text style={styles.objectDescription}>{data.description}</Text>
+            </View>
+            <Image style={styles.image} source={{ uri: photo }} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDelete(data._id)}>
+            <FontAwesomeIcon icon={faTrash} size={24} color="white" />
+          </TouchableOpacity>
+        </View>
       );
     });
   } else {
@@ -86,6 +108,7 @@ export default function ObjectListScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <SafeAreaView style={styles.objectPanel}>
+          <Text style={styles.title}>Mes objets</Text>
           <ScrollView showsVerticalScrollIndicator={true}>
             {objectsDisplayed}
           </ScrollView>
@@ -99,7 +122,7 @@ export default function ObjectListScreen({ navigation }) {
           </Button>
           <Button
             style={styles.addButton}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("Home")}
           >
             <Text style={styles.objectName}>Back</Text>
           </Button>
@@ -180,6 +203,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
+  objectInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "90%",
+  },
+
   bottomBar: {
     flexDirection: "row-reverse",
     width: "100%",
@@ -210,5 +240,12 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 10,
+  },
+  title: {
+    color: "white",
+    fontSize: 35,
+    fontWeight: "odor",
+    marginBottom: 10,
+    textAlign: "center",
   },
 });

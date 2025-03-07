@@ -20,110 +20,106 @@ export default function LoginScreen({ navigation }) {
   };
   return (
     <View style={styles.container}>
-      
       {/* Image du titre */}
       <Image
         style={styles.image}
         source={require("../assets/SherlockTitre.png")}
         resizeMode="contain"
       />
-      
-      {/* Bouton pour ouvrir le menu */}
-      <TouchableOpacity 
-        onPress={() => setModalVisible(true)} 
-        style={styles.menuButton}>
 
+      {/* Bouton pour ouvrir le menu */}
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)}
+        style={styles.menuButton}
+      >
         <Text style={styles.menuText}>☰</Text>
       </TouchableOpacity>
-  
+
       {/* Burger Menu */}
       <Modal
         transparent={true}
         animationType="fade"
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-
-        <TouchableOpacity 
-          style={styles.overlay} 
-          onPress={() => setModalVisible(false)}>
-
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.overlay}
+          onPress={() => setModalVisible(false)}
+        >
           <View style={styles.menuContainer}>
-            
             {/* Titre du menu */}
             <Text style={styles.menuTitle}>Menu</Text>
-            
-            {/* Items du menu */}
-            <TouchableOpacity 
-              style={styles.menuItem} 
-              onPress={() => navigation.goBack("NewObjet")}>
 
+            {/* Items du menu */}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.goBack("NewObject")}
+            >
               <Text style={styles.menuItemText}>Nouvel objet</Text>
             </TouchableOpacity>
-  
-            <TouchableOpacity 
-              style={styles.menuItem} 
-              onPress={() => navigation.goBack("")}>
 
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.goBack("")}
+            >
               <Text style={styles.menuItemText}>Mes prêts</Text>
             </TouchableOpacity>
-  
-            <TouchableOpacity 
-              style={styles.menuItem} 
-              onPress={() => navigation.goBack("Account")}>
 
-              <Text style={styles.menuItemText}>Mon compte</Text>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.goBack("MyObjects")}
+            >
+              <Text style={styles.menuItemText}>Mes objets</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </Modal>
-  
+
       {/* Section des boutons */}
       <View style={styles.squareContainer}>
-        
         {/* Bouton Home */}
-        <TouchableOpacity 
-          style={styles.homeButton} 
+        <TouchableOpacity
+          style={styles.homeButton}
           onPress={() => navigation.goBack("Home")}
         >
           <Text style={styles.buttonHome}>Home</Text>
         </TouchableOpacity>
-  
+
         {/* Bouton Modifier le mot de passe */}
-        <TouchableOpacity 
-          style={styles.button} 
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => navigation.navigate("")}
         >
           <Text style={styles.buttonModifier}>Modifier votre mot de passe</Text>
         </TouchableOpacity>
-  
+
         {/* Bouton Modifier la langue */}
-        <TouchableOpacity 
-          style={styles.button} 
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => navigation.navigate("")}
         >
           <Text style={styles.buttonModifier}>Modifier la langue</Text>
         </TouchableOpacity>
-  
+
         {/* Bouton Supprimer le compte */}
-        <TouchableOpacity 
-          style={styles.suppbutton} 
+        <TouchableOpacity
+          style={styles.suppbutton}
           onPress={() => navigation.navigate("First")}
         >
           <Text style={styles.buttonModifier}>Supprimer le compte</Text>
         </TouchableOpacity>
-  
+
         {/* Bouton Retour */}
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Text style={styles.buttonRetour}>Retour</Text>
         </TouchableOpacity>
       </View>
-      
     </View>
   );
-}  
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -145,7 +141,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-  },  
+  },
   image: {
     width: 225,
     height: 80,

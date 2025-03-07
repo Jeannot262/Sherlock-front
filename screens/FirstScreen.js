@@ -14,16 +14,16 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
 export default function FirstScreen({ navigation }) {
-
   useEffect(() => {
     navigation.getParent()?.setOptions({
       tabBarStyle: {
-        display: "none"
-      }
+        display: "none",
+      },
     });
-    return () => navigation.getParent()?.setOptions({
-      tabBarStyle: undefined
-    });
+    return () =>
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined,
+      });
   }, [navigation]);
 
   return (
@@ -55,6 +55,8 @@ export default function FirstScreen({ navigation }) {
         >
           <Text style={styles.textButton}>Se connecter</Text>
         </TouchableOpacity>
+
+        {/* connection with google à faire*/}
         <TouchableOpacity
           style={styles.googlebutton}
           onPress={() => navigation.navigate("Profile")}
