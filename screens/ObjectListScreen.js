@@ -22,11 +22,11 @@ import { updateObject } from "../reducers/object";
 export default function ObjectListScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
-  const tempObjectList = useSelector((state) =>state.objectList.value);
+  const object = useSelector((state) => state.object.value);
+  const [objectTrigger, setObjectTrigger] = useState(object);
   const [objectList, setObjectList] = useState([]);
   //const [objectDisplayed, setObjectDisplayed] = useState([]);
-  const object = useSelector((state) => state.object.value);
-  const photo = object.picture;
+  //const photo = object.picture;
 
   useEffect(() => {
     fetch(
@@ -41,7 +41,7 @@ export default function ObjectListScreen({ navigation }) {
           console.log("ERROR");
         }
       });
-  }, [tempObjectList]);
+  }, [objectTrigger]);
 
   const handleDelete = (objectId) => {
     fetch(
@@ -81,8 +81,9 @@ export default function ObjectListScreen({ navigation }) {
             <Text style={styles.objectName}>{data.name}</Text>
             <Text style={styles.objectDescription}>{data.description}</Text>
           </View>
-          <Image style={styles.image} source={data.picture} />
-          {data.loanedTo !== "" ? <Image style={styles.pipe} source={require("../assets/smoking-pipe.png")}/> : <></>}
+          <Image style={styles.image} source={{uri : data.picture}}/>
+          {data.loanedTo !== "" && <Image style={styles.blackOpacity}source={require("../assets/blackOpacity.png")}/>}
+          {data.loanedTo !== "" && <Image style={styles.pipe} source={require("../assets/smoking-pipe.png")}/>}
         </TouchableOpacity>
       );
     });
@@ -99,13 +100,13 @@ export default function ObjectListScreen({ navigation }) {
     <>
       <SafeAreaProvider style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.homeButton}
             onPress={() => navigation.navigate("Home")}
             activeOpacity={0.8}
           >
             <Text style={styles.textButton}>Home</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Image
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
@@ -131,10 +132,10 @@ export default function ObjectListScreen({ navigation }) {
           >
             <Text style={styles.objectName}>+</Text>
           </Button>
-          <Button
+          {/* <Button
             style={styles.addButton} onPress={() => navigation.navigate("Login")}>
             <FontAwesome name='arrow-left' size={25} color="white"/>
-          </Button>
+          </Button> */}
         </View>
       </SafeAreaProvider>
     </>
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
 
   header: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
     height: 120,
@@ -160,28 +161,19 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 200,
-    height: 50,
-  },
-
-  homeButton: {
-    backgroundColor: "#392A1D",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    width: 60,
-    height: 40,
-    width: 100,
+    width: 250,
+    height: 100,
   },
 
   accountButton: {
     backgroundColor: "#392A1D",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 20,
-    width: 60,
-    height: 40,
-    width: 100,
+    borderRadius: 50,
+    width: 80,
+    height: 80,
+    marginRight : 10,
+    marginTop : 15
   },
 
   textButton: {
@@ -226,7 +218,7 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    width: 70,
+    width: 300,
     height: 70,
     marginTop: 20,
     backgroundColor: "#392A1D",
@@ -251,6 +243,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
+  blackOpacity: {
+    position : "absolute",
+    width: 121,
+    height: 121,
+    borderRadius: 10,
+    marginLeft : 235,
+    marginTop : 10,
+  },
+
   pipe : {
     position : "absolute",
     width : 45,
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
   title: {
     color: "white",
     fontSize: 35,
-    fontWeight: "odor",
+    fontWeight: 800,
     marginBottom: 10,
     textAlign: "center",
   },

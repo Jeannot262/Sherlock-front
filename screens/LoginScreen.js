@@ -4,6 +4,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ToastAndroid,
   TextInput,
 } from "react-native";
 import { Button, Provider, Tooltip } from "@ant-design/react-native";
@@ -16,6 +17,10 @@ export default function LoginScreen({ navigation }) {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const showToast = () => {
+    ToastAndroid.show("Nom d'utilisateur ou mot de passe incorrect!", ToastAndroid.SHORT, ToastAndroid.CENTER);
+  };
 
   const loginButtonClicked = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/login`, {
@@ -35,9 +40,12 @@ export default function LoginScreen({ navigation }) {
           );
           setUsername("");
           setPassword("");
-          navigation.navigate("Home");
-        } else {
-          setNotConfirmed(true);
+          navigation.navigate("TabNavigator");
+        } 
+        else 
+        {
+          //setNotConfirmed(true);
+          showToast();
           console.log("Something went wrong!");
         }
       });
@@ -65,16 +73,16 @@ export default function LoginScreen({ navigation }) {
             onChangeText={(e) => setPassword(e)}
             value={password}
           />
-          <Tooltip
+          <Button onPress={() => loginButtonClicked()} style={styles.button}>
+            <Text style={styles.buttonConnexion}>Connexion</Text>
+          </Button>
+          {/* <Tooltip
             content="Incorrect username or password!"
             placement="top"
             mode="dark"
             crossOffset={{ top: 1 }}
           >
-            <Button onPress={() => loginButtonClicked()} style={styles.button}>
-              <Text style={styles.buttonConnexion}>Connexion</Text>
-            </Button>
-          </Tooltip>
+          </Tooltip> */}
 
           <TouchableOpacity
             style={styles.backButton}

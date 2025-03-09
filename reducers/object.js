@@ -25,11 +25,11 @@ export const objectSlice = createSlice({
       console.log(state.value);
     },
     addPhoto: (state, action) => {
-      console.log(action.payload)
       state.value.picture = action.payload;
+      console.log(state.value);
     },
     removePhoto: (state, action) => {
-      state.value.picture = "";
+      state.value.picture = null;
     },
   },
 });

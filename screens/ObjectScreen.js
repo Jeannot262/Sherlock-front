@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  View
 } from "react-native";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -16,11 +17,11 @@ import { updateObject, removePhoto } from "../reducers/object";
 
 export default function ObjectScreen({ navigation }) {
   const object = useSelector((state) => state.object.value);
+  const objectPicture = object.picture;
   const [name, setName] = useState(object.name);
   const [description, setDescription] = useState(object.description);
   const [loaned, setLoaned] = useState(object.loanedTo !== "" ? true : false);
   const [loanedTo, setLoanedTo] = useState(object.loanedTo);
-  console.log(loanedTo);
 
   const loanSwitch = () => {
     setLoaned(!loaned)
@@ -31,7 +32,7 @@ export default function ObjectScreen({ navigation }) {
     fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/updateObject/${object.owner}/${object.name}`, {
       method : "PUT",
       headers : { "Content-Type" : "application/json"},
-      body : JSON.stringify({name : name, picture : object.picture, description : description, loanedTo : loanedTo})
+      body : JSON.stringify({name : name, picture : objectPicture, description : description, loanedTo : loanedTo})
     })
     .then(response => response.json())
     .then(data => {
@@ -40,13 +41,14 @@ export default function ObjectScreen({ navigation }) {
         console.log(data.update)
         dispatch(updateObject({
           name : name,
-          picture : object.picture,
+          picture : objectPicture,
           description : description,
           loanedTo : loanedTo,
           sharedWith : object.sharedWith,
           owner : object.owner
-        }))
-        .then(() => navigation.navigate("MyObjects"))
+        }));
+        //navigation.navigate("MyObjects");
+        navigation.goBack();
       }
       else
       {
@@ -57,8 +59,8 @@ export default function ObjectScreen({ navigation }) {
 
   return (
     <>
-      <SafeAreaProvider style={styles.container}>
-          <SafeAreaView style={styles.header}>
+      <View style={styles.container}>
+          <View style={styles.header}>
             <TouchableOpacity
             style={styles.homeButton}
             onPress={() => navigation.navigate("Home")}
@@ -72,9 +74,9 @@ export default function ObjectScreen({ navigation }) {
             activeOpacity={0.8}>
               <Text style={styles.textButton}>Profile</Text>
             </TouchableOpacity>
-          </SafeAreaView>
-          <SafeAreaView style={styles.objectContainer} edges={[]}>
-            <SafeAreaView style={styles.row} edges={[]}>
+          </View>
+          <View style={styles.objectContainer} edges={[]}>
+            <View style={styles.row} edges={[]}>
               <Text style={styles.text}>Nom</Text>
               <TextInput 
               style={styles.nameInput} 
@@ -83,14 +85,14 @@ export default function ObjectScreen({ navigation }) {
               onChangeText={(e) => setName(e)} 
               value={name}>
               </TextInput>
-            </SafeAreaView>
-            <SafeAreaView style={styles.pictureRow} edges={[]}>
+            </View>
+            <View style={styles.pictureRow} edges={[]}>
               <Text style={styles.text}>Photo</Text>
               <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate("CameraScreen")}>
-                  <Image style={styles.image} source={object.picture}/>
+                  <Image style={styles.image} source={{uri : objectPicture}}/>
               </TouchableOpacity>
-            </SafeAreaView>
-            <SafeAreaView style={styles.column} edges={[]}>
+            </View>
+            <View style={styles.column} edges={[]}>
               <Text style={styles.text}>Description</Text>
               <TextInput 
               style={styles.descriptionInput} 
@@ -101,17 +103,19 @@ export default function ObjectScreen({ navigation }) {
               onChangeText={(e) => setDescription(e)} 
               value={description}>                      
               </TextInput>
-            </SafeAreaView>
-            <SafeAreaView style={styles.row} edges={[]}>
-              <Text style={styles.text}>Prêté?</Text>
-              <Image style={styles.pipe} source={loaned ? require("../assets/smoking-pipe.png") : require("../assets/darker-pipe.png")}/>
-              <Switch
-              trackColor={{false : "grey", true : "#392A1D"}}
-              thumbColor={loaned ? "#E9B78E" : "white"}
-              style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
-              onValueChange={() => loanSwitch()}
-              value = {loaned}/>
-            </SafeAreaView>
+            </View>
+            <SafeAreaProvider>
+              <SafeAreaView style={styles.row} edges={[]}>
+                <Text style={styles.text}>Prêté?</Text>
+                <Image style={styles.pipe} source={loaned ? require("../assets/smoking-pipe.png") : require("../assets/darker-pipe.png")}/>
+                <Switch
+                trackColor={{false : "grey", true : "#392A1D"}}
+                thumbColor={loaned ? "#E9B78E" : "white"}
+                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                onValueChange={() => loanSwitch()}
+                value = {loaned}/>
+              </SafeAreaView>
+            </SafeAreaProvider>
             {loaned && <TextInput
               style={styles.loanInput} 
               placeholder="A qui avez-vous prêté l'objet?" 
@@ -119,16 +123,16 @@ export default function ObjectScreen({ navigation }) {
               onChangeText={(e) => setLoanedTo(e)} 
               value={loanedTo}>
             </TextInput>}
-          </SafeAreaView>
-          <SafeAreaView style={styles.bottomBar} edges={[]}>
-            <Button style={styles.backButton} onPress={() => navigation.navigate("MyObjects")}>
+          </View>
+          <View style={styles.bottomBar} edges={[]}>
+            <Button style={styles.backButton} onPress={() => navigation.goBack()}>
               <FontAwesome name='arrow-left' size={25} color="white"/>
             </Button>
             <Button style={styles.validateButton} onPress={() => validateButtonPressed()}>
               <Text style={styles.objectName}>Valider</Text>
             </Button>
-          </SafeAreaView>
-        </SafeAreaProvider>
+          </View>
+        </View>
     </>
   );
 }
@@ -270,8 +274,11 @@ const styles = StyleSheet.create({
   },
     
   imageContainer : {
-    width : 180,
-    height : 180,
+    width : 185,
+    height : 185,
+    borderRadius : 10,
+    borderWidth : 2,
+    borderColor : "white",
     marginVertical : 30,
   },
     
@@ -279,6 +286,8 @@ const styles = StyleSheet.create({
     width : 180,
     height : 180,
     borderRadius : 10,
+    // borderWidth : 2,
+    // borderColor : "red",
   },
     
   pipe : {

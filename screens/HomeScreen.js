@@ -12,6 +12,9 @@ import {
   Animated,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+import { updateUser } from "../reducers/user";
+
 const { width: screenWidth } = Dimensions.get("window");
 
 const images = [
@@ -24,6 +27,8 @@ const images = [
 ];
 
 export default function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
+
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef(null);
   const currentIndex = useRef(0);
@@ -43,6 +48,14 @@ export default function HomeScreen({ navigation }) {
     return () => clearInterval(interval);
   });
 
+  const logoutPressed = () => {
+    dispatch(updateUser({
+      _id: null,
+      username: null,
+      password: null,}
+    ));
+  };
+
   return (
     <KeyboardAvoidingView
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -51,7 +64,10 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.headerContainer}>
         <TouchableOpacity
           style={styles.logoutButton}
-          onPress={() => navigation.navigate("Logout")}
+          onPress={() => {
+            navigation.navigate("Login");
+            logoutPressed();
+          }}
           activeOpacity={0.8}
         >
           <Text style={styles.textButton}>Logout</Text>

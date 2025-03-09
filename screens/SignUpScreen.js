@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, ToastAndroid, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import {Button, Provider, Tooltip} from "@ant-design/react-native";
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,6 +10,13 @@ export default function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState("");
+
+  const showToast1 = () => {
+    ToastAndroid.show("Mot de passe mal confirmé!", ToastAndroid.SHORT, ToastAndroid.CENTER);
+  };
+  const showToast2 = () => {
+    ToastAndroid.show("Nom d'utilisateur indisponible!", ToastAndroid.SHORT, ToastAndroid.CENTER);
+  };
 
   const signupButtonClicked = () =>{
     if(password === confirmedPassword)
@@ -32,14 +39,14 @@ export default function SignUpScreen({ navigation }) {
           else
           {
             console.log("Something went wrong!");
-            return;
+            showToast2();
           }
         });
     }
     else
     {
       console.log("Make sure to confirm your password!"); 
-      return;
+      showToast1();
     }
   };
 
@@ -68,13 +75,13 @@ export default function SignUpScreen({ navigation }) {
                     onChangeText={(e) => setConfirmedPassword(e)}
                     value={confirmedPassword}
                 />
-                <Tooltip content="Error! Username may already be taken or password was not confirmed properly!" placement='top' mode = "dark" crossOffset={{top : 1}}>
-                    <Button 
-                        style={styles.button} 
-                        onPress={() => signupButtonClicked()}>
-                        <Text style={styles.buttonConnexion}>Créer un compte</Text>
-                    </Button>  
-                </Tooltip>
+                <Button 
+                style={styles.button} 
+                onPress={() => signupButtonClicked()}>
+                  <Text style={styles.buttonConnexion}>Créer un compte</Text>
+                </Button> 
+                {/* <Tooltip content="Error! Username may already be taken or password was not confirmed properly!" placement='top' mode = "dark" crossOffset={{top : 1}}> 
+                </Tooltip> */}
 
                 <TouchableOpacity
                     style={styles.backButton}

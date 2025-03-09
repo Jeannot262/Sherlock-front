@@ -1,10 +1,10 @@
-import { StyleSheet, Switch, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Switch, Text, ToastAndroid, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Button } from "@ant-design/react-native";
+import { Button, Toast } from "@ant-design/react-native";
 
 import { addPhoto } from "../reducers/object";
 
@@ -18,28 +18,38 @@ export default function NewObjectScreen({navigation}) {
   const [loaned, setLoaned] = useState(false);
   const [loanedTo, setLoanedTo] = useState("");
 
-    const addObject = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/addObject`, {
-            method : "POST",
-            headers : {"Content-Type" : "application/json"},
-            body : JSON.stringify({name : name, picture : picture, description : description, owner : user._id, loanedTo : loanedTo})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.result)
-            {
-               console.log(data.newObject);
-            }
-            else
-            {
-                console.log("Something went wrong!");
-            }
-        })
-    };
+  const loanSwitch = () => {
+    setLoaned(!loaned)
+    setLoanedTo("");
+  };
 
-    const addPicture = () => {
-        dispatch(addPhoto())
-    };
+  const showToast = () => {
+    ToastAndroid.show("Donnez un nom et une description à votre objet!", ToastAndroid.SHORT, ToastAndroid.CENTER);
+  };
+
+  const addObject = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/addObject`, {
+    method : "POST",
+    headers : {"Content-Type" : "application/json"},
+    body : JSON.stringify({name : name, picture : object.picture, description : description, owner : user._id, loanedTo : loanedTo})
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.result)
+      {
+        console.log(data.newObject);
+      }
+      else
+      {
+        console.log("Something went wrong!");
+        showToast();
+      }
+    })
+  };
+
+  const addPicture = () => {
+    dispatch(addPhoto())
+  };
     
     return (
         <>
