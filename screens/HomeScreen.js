@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../reducers/user";
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -29,7 +29,12 @@ const { width: screenWidth } = Dimensions.get("window");
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
-  const [image, setImages] = useState([]);
+  const imageList = useSelector((state) => state.objectList?.value?.list) || [];
+
+  console.log(
+    "Redux state:",
+    useSelector((state) => state.objectList)
+  );
 
   const [profileImage, setProfileImage] = useState(null);
 
@@ -39,16 +44,11 @@ export default function HomeScreen({ navigation }) {
   const autoScroll = useRef(true);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const response = await fetch();
-      const data = await response.json();
-      setImages(data);
-    };
-    fetchImages();
+    if (!imageList || imageList.length === 0) return;
 
     const interval = setInterval(() => {
       if (autoScroll.current && flatListRef.current) {
-        currentIndex.current = (currentIndex.current + 1) % images.length;
+        currentIndex.current = (currentIndex.current + 1) % imageList.length;
         flatListRef.current.scrollToIndex({
           index: currentIndex.current,
           animated: true,
@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation }) {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [imageList.length]);
 
   const logoutPressed = () => {
     dispatch(
@@ -80,6 +80,7 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  console.log("imagelist=", imageList);
   return (
     <KeyboardAvoidingView
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -113,54 +114,58 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.carouselcontainer}>
-        <FlatList
-          ref={flatListRef}
-          data={images}
-          keyExtractor={(_, index) => index.toString()}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          decelerationRate="fast"
-          snapToAlignment="center"
-          snapToInterval={screenWidth * 0.7}
-          contentContainerStyle={{
-            paddingHorizontal: (screenWidth - screenWidth * 0.7) / 2,
-          }}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false }
-          )}
-          onTouchStart={() => (autoScroll.current = false)}
-          onMomentumScrollEnd={() => (autoScroll.current = true)}
-          renderItem={({ item, index }) => {
-            const inputRange = [
-              (index - 1) * screenWidth * 0.7,
-              index * screenWidth * 0.7,
-              (index + 1) * screenWidth * 0.7,
-            ];
-            const scale = scrollX.interpolate({
-              inputRange,
-              outputRange: [0.8, 1.2, 0.8],
-              extrapolate: "clamp",
-            });
-            const opacity = scrollX.interpolate({
-              inputRange,
-              outputRange: [0.5, 1, 0.5],
-              extrapolate: "clamp",
-            });
-            return (
-              <View style={styles.carouselItem}>
-                <Animated.Image
-                  source={item}
-                  style={[
-                    styles.carouselImage,
-                    { transform: [{ scale }], opacity },
-                  ]}
-                  resizeMode="cover"
-                />
-              </View>
-            );
-          }}
-        />
+        {imageList.length === 0 ? (
+          <Text>Aucune image disponible</Text>
+        ) : (
+          <FlatList
+            ref={flatListRef}
+            data={imageList}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"
+            snapToAlignment="center"
+            snapToInterval={screenWidth * 0.7}
+            contentContainerStyle={{
+              paddingHorizontal: (screenWidth - screenWidth * 0.7) / 2,
+            }}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+              { useNativeDriver: false }
+            )}
+            onTouchStart={() => (autoScroll.current = false)}
+            onMomentumScrollEnd={() => (autoScroll.current = true)}
+            renderItem={({ item, index }) => {
+              const inputRange = [
+                (index - 1) * screenWidth * 0.7,
+                index * screenWidth * 0.7,
+                (index + 1) * screenWidth * 0.7,
+              ];
+              const scale = scrollX.interpolate({
+                inputRange,
+                outputRange: [0.8, 1.2, 0.8],
+                extrapolate: "clamp",
+              });
+              const opacity = scrollX.interpolate({
+                inputRange,
+                outputRange: [0.5, 1, 0.5],
+                extrapolate: "clamp",
+              });
+              return (
+                <View style={styles.carouselItem}>
+                  <Animated.Image
+                    source={{ uri: item }}
+                    style={[
+                      styles.carouselImage,
+                      { transform: [{ scale }], opacity },
+                    ]}
+                    resizeMode="cover"
+                  />
+                </View>
+              );
+            }}
+          />
+        )}
       </View>
       <View style={styles.buttoncontainer}>
         <TouchableOpacity
@@ -341,7 +346,7 @@ const styles = StyleSheet.create({
   // },
   profileImage: {
     height: 40,
-    width:40,
+    width: 40,
     marginRight: 30,
     borderRadius: 20,
   },
