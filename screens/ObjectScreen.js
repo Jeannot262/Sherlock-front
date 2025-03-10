@@ -17,8 +17,12 @@ export default function ObjectScreen({ navigation }) {
   const [loaned, setLoaned] = useState(object.loanedTo !== "" ? true : false);
   const [loanedTo, setLoanedTo] = useState(object.loanedTo);
 
-  const showToast = () => {
-      Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
+  const showUpdateToast = () => {
+    Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
+  };
+
+  const showErrorToast = () => {
+    Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
   };
 
   const loanSwitch = () => {
@@ -38,12 +42,13 @@ export default function ObjectScreen({ navigation }) {
       {
         // console.log(data.update);
         // console.log(object._id)
-        showToast();
+        showUpdateToast();
         dispatch(updateObjectList(data.object));
       }
       else
       {
         console.log(data.error);
+        showErrorToast();
       }
     })
   };
