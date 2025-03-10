@@ -32,7 +32,9 @@ export const objectListSlice = createSlice({
       state.value.object.picture = null;
     },
     removeObjectFromList: (state, action) => {
-      state.value = state.value.filter((obj) => obj._id !== action.payload);
+      state.value.list = state.value.list.filter(
+        (obj) => obj._id !== action.payload
+      );
     },
   },
 });
