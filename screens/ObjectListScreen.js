@@ -16,17 +16,16 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { createObjectList } from "../reducers/objectList";
+import { createObjectList, updateObjectList } from "../reducers/objectList";
 import { updateObject } from "../reducers/object";
+
+import { useIsFocused } from "@react-navigation/native";
 
 export default function ObjectListScreen({ navigation }) {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const user = useSelector((state) => state.user.value);
-  const object = useSelector((state) => state.object.value);
-  const [objectTrigger, setObjectTrigger] = useState(object);
-  const [objectList, setObjectList] = useState([]);
-  //const [objectDisplayed, setObjectDisplayed] = useState([]);
-  //const photo = object.picture;
+  const objectList = useSelector((state) => state.objectList.value.list);
 
   useEffect(() => {
     fetch(
@@ -36,12 +35,11 @@ export default function ObjectListScreen({ navigation }) {
       .then((data) => {
         if (data.result) {
           dispatch(createObjectList(data.objectList.objects));
-          setObjectList(data.objectList.objects);
         } else {
           console.log("ERROR");
         }
       });
-  }, [objectTrigger]);
+  }, [isFocused]);
 
   const handleDelete = (objectId) => {
     fetch(
@@ -53,7 +51,7 @@ export default function ObjectListScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          setObjectList(objectList.filter((obj) => obj._id !== objectId));
+          return;
         } else {
           console.log("ERROR");
         }
@@ -69,7 +67,8 @@ export default function ObjectListScreen({ navigation }) {
           style={styles.objectContainer}
           onPress={() => {
             navigation.navigate("Object");
-            dispatch(updateObject({
+            dispatch(updateObjectList({
+              _id : data._id,
               name : data.name,
               picture : data.picture,
               description : data.description,
@@ -100,13 +99,6 @@ export default function ObjectListScreen({ navigation }) {
     <>
       <SafeAreaProvider style={styles.container}>
         <View style={styles.header}>
-          {/* <TouchableOpacity
-            style={styles.homeButton}
-            onPress={() => navigation.navigate("Home")}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButton}>Home</Text>
-          </TouchableOpacity> */}
           <Image
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
@@ -132,10 +124,6 @@ export default function ObjectListScreen({ navigation }) {
           >
             <Text style={styles.objectName}>+</Text>
           </Button>
-          {/* <Button
-            style={styles.addButton} onPress={() => navigation.navigate("Login")}>
-            <FontAwesome name='arrow-left' size={25} color="white"/>
-          </Button> */}
         </View>
       </SafeAreaProvider>
     </>

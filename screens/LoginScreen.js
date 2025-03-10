@@ -1,13 +1,6 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  ToastAndroid,
-  TextInput,
-} from "react-native";
-import { Button, Provider, Tooltip } from "@ant-design/react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, } from "react-native";
+import { Button, Provider } from "@ant-design/react-native";
+import Toast from "react-native-simple-toast";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../reducers/user";
@@ -19,7 +12,7 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState("");
 
   const showToast = () => {
-    ToastAndroid.show("Nom d'utilisateur ou mot de passe incorrect!", ToastAndroid.SHORT, ToastAndroid.CENTER);
+    Toast.show("Nom d'utilisateur ou mot de passe incorrect!", Toast.SHORT, Toast.CENTER);
   };
 
   const loginButtonClicked = () => {
