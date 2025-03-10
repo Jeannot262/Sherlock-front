@@ -79,40 +79,35 @@ export default function LoginScreen({ navigation }) {
         {/* Bouton Home */}
         <TouchableOpacity
           style={styles.homeButton}
-          onPress={() => navigation.goBack("Home")}
-        >
+          onPress={() => navigation.goBack("Home")}>
           <Text style={styles.buttonHome}>Home</Text>
         </TouchableOpacity>
 
         {/* Bouton Modifier le mot de passe */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("")}
-        >
+          onPress={() => navigation.navigate("")}>
           <Text style={styles.buttonModifier}>Modifier votre mot de passe</Text>
         </TouchableOpacity>
 
         {/* Bouton Modifier la langue */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("")}
-        >
+          onPress={() => navigation.navigate("")}>
           <Text style={styles.buttonModifier}>Modifier la langue</Text>
         </TouchableOpacity>
 
         {/* Bouton Supprimer le compte */}
         <TouchableOpacity
           style={styles.suppbutton}
-          onPress={() => navigation.navigate("First")}
-        >
+          onPress={() => navigation.navigate("First")}>
           <Text style={styles.buttonModifier}>Supprimer le compte</Text>
         </TouchableOpacity>
 
         {/* Bouton Retour */}
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Text style={styles.buttonRetour}>Retour</Text>
         </TouchableOpacity>
       </View>
