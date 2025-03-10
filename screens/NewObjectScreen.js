@@ -3,7 +3,7 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from "@react-navigation/native";
-import { addObject, updateObjectList } from '../reducers/objectList';
+import { addObject, resetObject } from '../reducers/objectList';
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Button} from "@ant-design/react-native";
@@ -21,15 +21,7 @@ export default function NewObjectScreen({navigation}) {
   const [loanedTo, setLoanedTo] = useState("");
 
   useEffect(() => {
-    dispatch(updateObjectList({
-      _id : null,
-      name: null,
-      picture: null,
-      description: null,
-      loanedTo: null,
-      sharedWith: null,
-      owner: null,
-    }));
+    dispatch(resetObject());
     console.log(object);
   }, [isFocused])
 
@@ -57,7 +49,8 @@ export default function NewObjectScreen({navigation}) {
       if(data.result)
       {
         console.log(data.newObject);
-        dispatch(addObject(data.newObject))
+        dispatch(addObject(data.newObject));
+        showCreatedToast();
       }
       else
       {

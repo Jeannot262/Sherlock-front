@@ -3,7 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   value: {
     list: null,
-    object: null,
+    object: {
+      _id : null,
+      name: "",
+      picture: "",
+      description: "",
+      loanedTo: "",
+      sharedWith: null,
+      owner: null,
+    },
   },
 };
 
@@ -32,7 +40,19 @@ export const objectListSlice = createSlice({
       state.value.object.picture = null;
     },
     removeObjectFromList: (state, action) => {
-      state.value = state.value.filter((obj) => obj._id !== action.payload);
+      state.value.list = state.value.list.filter((obj) => obj.name !== action.payload);
+      console.log(state.value.list);
+    },
+    resetObject: (state) => {
+      state.value.object = {
+        _id : null,
+        name: "",
+        picture: "",
+        description: "",
+        loanedTo: "",
+        sharedWith: null,
+        owner: null,
+      }
     },
   },
 });
@@ -44,5 +64,6 @@ export const {
   addPhoto,
   removePhoto,
   removeObjectFromList,
+  resetObject,
 } = objectListSlice.actions;
 export default objectListSlice.reducer;

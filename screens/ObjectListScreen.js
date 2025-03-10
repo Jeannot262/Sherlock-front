@@ -40,16 +40,16 @@ export default function ObjectListScreen({ navigation }) {
       });
   }, [isFocused]);
 
-  const handleDelete = (objectId) => {
+  const handleDelete = (objectName) => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteObject/${user._id}/${objectId}`,
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteObject/${user._id}/${objectName}`,
       {
         method: "DELETE",
       }
     )
       .then((response) => response.json())
       .then((data) => {
-        data.result && dispatch(removeObjectFromList(objectId));
+        data.result && dispatch(removeObjectFromList(objectName));
       });
   };
 
@@ -73,11 +73,12 @@ export default function ObjectListScreen({ navigation }) {
                 owner: data.owner,
               })
             );
-          }}
-        >
+          }}>
           <View>
             <Text style={styles.objectName}>{data.name}</Text>
-            <Text style={styles.objectDescription}>{data.description}</Text>
+            <Text style={styles.objectDescription}>
+              {data.description.length >= 20 ? data.description.slice(0, 20) + "..." : data.description}
+            </Text>
           </View>
           <Image style={styles.image} source={{ uri: data.picture }} />
           {data.loanedTo !== "" && (
@@ -98,10 +99,10 @@ export default function ObjectListScreen({ navigation }) {
         </TouchableOpacity>
       );
     });
-  } else {
+  } else { 
     objectsDisplayed = (
       <View>
-        <Text>You haven't stored any object yet!</Text>
+        <Text style={styles.objectName}>You haven't stored any object yet!</Text>
       </View>
     );
   }

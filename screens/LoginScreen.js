@@ -33,7 +33,7 @@ export default function LoginScreen({ navigation }) {
           );
           setUsername("");
           setPassword("");
-          navigation.navigate("TabNavigator");
+          navigation.navigate("TabNavigator", {screen : "Shared"});
         } 
         else 
         {
