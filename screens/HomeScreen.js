@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   TouchableOpacity,
   View,
@@ -17,17 +17,18 @@ import { updateUser } from "../reducers/user";
 
 const { width: screenWidth } = Dimensions.get("window");
 
-const images = [
-  require("../assets/cable-ethernet.jpg"),
-  require("../assets/jumelles.jpg"),
-  require("../assets/clefs.jpg"),
-  require("../assets/medicaments.jpg"),
-  require("../assets/bijoux.jpg"),
-  require("../assets/perceuse.jpg"),
-];
+// const images = [
+//   require("../assets/cable-ethernet.jpg"),
+//   require("../assets/jumelles.jpg"),
+//   require("../assets/clefs.jpg"),
+//   require("../assets/medicaments.jpg"),
+//   require("../assets/bijoux.jpg"),
+//   require("../assets/perceuse.jpg"),
+// ];
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
+  const [image, setImages] = useState([]);
 
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef(null);
@@ -35,6 +36,13 @@ export default function HomeScreen({ navigation }) {
   const autoScroll = useRef(true);
 
   useEffect(() => {
+    const fetchImages = async () => {
+      const response = await fetch();
+      const data = await response.json();
+      setImages(data);
+    };
+    fetchImages();
+
     const interval = setInterval(() => {
       if (autoScroll.current && flatListRef.current) {
         currentIndex.current = (currentIndex.current + 1) % images.length;
@@ -46,14 +54,16 @@ export default function HomeScreen({ navigation }) {
     }, 3000);
 
     return () => clearInterval(interval);
-  });
+  }, [images.length]);
 
   const logoutPressed = () => {
-    dispatch(updateUser({
-      _id: null,
-      username: null,
-      password: null,}
-    ));
+    dispatch(
+      updateUser({
+        _id: null,
+        username: null,
+        password: null,
+      })
+    );
   };
 
   return (
@@ -278,7 +288,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "90%",
     padding: 10,
-    marginBottom: 40,
+    marginBottom: 15,
   },
   button: {
     backgroundColor: "#392A1D",
@@ -305,7 +315,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 8,
     margin: 10,
-    height: 80,
+    height: 100,
   },
   // buttonContent: {
   //   flexDirection: "row",

@@ -28,7 +28,7 @@ export default function FirstScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <Image
