@@ -6,18 +6,17 @@ import {
   View,
   Image,
   TouchableOpacity,
-  TextInput,
 } from "react-native";
 
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@ant-design/react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { createObjectList, updateObjectList } from "../reducers/objectList";
-import { updateObject } from "../reducers/object";
+import {
+  createObjectList,
+  updateObjectList,
+  removeObjectFromList,
+} from "../reducers/objectList";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -50,11 +49,7 @@ export default function ObjectListScreen({ navigation }) {
     )
       .then((response) => response.json())
       .then((data) => {
-        if (data.result) {
-          return;
-        } else {
-          console.log("ERROR");
-        }
+        data.result && dispatch(removeObjectFromList(objectId));
       });
   };
 
@@ -67,27 +62,43 @@ export default function ObjectListScreen({ navigation }) {
           style={styles.objectContainer}
           onPress={() => {
             navigation.navigate("Object");
-            dispatch(updateObjectList({
-              _id : data._id,
-              name : data.name,
-              picture : data.picture,
-              description : data.description,
-              loanedTo : data.loanedTo,
-              sharedWith : data.sharedWith,
-              owner : data.owner}));
-            }}>
+            dispatch(
+              updateObjectList({
+                _id: data._id,
+                name: data.name,
+                picture: data.picture,
+                description: data.description,
+                loanedTo: data.loanedTo,
+                sharedWith: data.sharedWith,
+                owner: data.owner,
+              })
+            );
+          }}
+        >
           <View>
             <Text style={styles.objectName}>{data.name}</Text>
             <Text style={styles.objectDescription}>{data.description}</Text>
           </View>
-          <Image style={styles.image} source={{uri : data.picture}}/>
-          {data.loanedTo !== "" && <Image style={styles.blackOpacity}source={require("../assets/blackOpacity.png")}/>}
-          {data.loanedTo !== "" && <Image style={styles.pipe} source={require("../assets/smoking-pipe.png")}/>}
+          <Image style={styles.image} source={{ uri: data.picture }} />
+          {data.loanedTo !== "" && (
+            <Image
+              style={styles.blackOpacity}
+              source={require("../assets/blackOpacity.png")}
+            />
+          )}
+          {data.loanedTo !== "" && (
+            <Image
+              style={styles.pipe}
+              source={require("../assets/smoking-pipe.png")}
+            />
+          )}
+          <TouchableOpacity onPress={() => handleDelete(data.name)}>
+            <FontAwesome name="trash-o" size={20} color="white" />
+          </TouchableOpacity>
         </TouchableOpacity>
       );
     });
-  } 
-  else {
+  } else {
     objectsDisplayed = (
       <View>
         <Text>You haven't stored any object yet!</Text>
@@ -151,6 +162,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 250,
     height: 100,
+    marginLeft: 70,
   },
 
   accountButton: {
@@ -160,8 +172,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 80,
     height: 80,
-    marginRight : 10,
-    marginTop : 15
+    marginRight: 10,
+    marginTop: 15,
   },
 
   textButton: {
@@ -226,26 +238,29 @@ const styles = StyleSheet.create({
   },
 
   image: {
+    position: "absolute",
     width: 120,
     height: 120,
     borderRadius: 10,
+    marginLeft: 235,
+    marginTop: 15,
   },
 
   blackOpacity: {
-    position : "absolute",
+    position: "absolute",
     width: 121,
     height: 121,
     borderRadius: 10,
-    marginLeft : 235,
-    marginTop : 10,
+    marginLeft: 235,
+    marginTop: 15,
   },
 
-  pipe : {
-    position : "absolute",
-    width : 45,
-    height : 45,
-    marginTop : 95,
-    marginLeft : 310
+  pipe: {
+    position: "absolute",
+    width: 50,
+    height: 50,
+    marginTop: 95,
+    marginLeft: 310,
   },
 
   title: {
@@ -255,5 +270,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
-  
 });
