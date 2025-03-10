@@ -23,6 +23,7 @@
     "antd": "^5.24.2",
     "expo": "~52.0.37",
     "expo-camera": "^16.0.17",
+    "expo-image-picker": "^16.0.6",
     "expo-status-bar": "~2.0.1",
     "persist": "^0.2.7",
     "react": "18.3.1",

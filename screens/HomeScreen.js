@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   TouchableOpacity,
   View,
@@ -12,6 +12,7 @@ import {
   Animated,
 } from "react-native";
 
+import * as ImagePicker from "expo-image-picker";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../reducers/user";
 
@@ -28,6 +29,8 @@ const images = [
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
+
+  const [profileImage, setProfileImage] = useState(null);
 
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef(null);
@@ -56,6 +59,17 @@ export default function HomeScreen({ navigation }) {
     ));
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -77,12 +91,15 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/SherlockTitre.png")}
           resizeMode="contain"
         />
-        <TouchableOpacity
-          style={styles.accountButton}
-          onPress={() => navigation.navigate("Account")}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textAccountButton}>Account</Text>
+        <TouchableOpacity onPress={pickImage} activeOpacity={0.8}>
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          ) : (
+            <Image
+              source={require("../assets/placeholder.png")}
+              style={styles.profileImage}
+            />
+          )}
         </TouchableOpacity>
       </View>
       <View style={styles.carouselcontainer}>
@@ -312,4 +329,10 @@ const styles = StyleSheet.create({
   //   alignItems: "center",
   //   justifyContent: "center",
   // },
+  profileImage: {
+    height: 40,
+    width:40,
+    marginRight: 30,
+    borderRadius: 20,
+  },
 });
