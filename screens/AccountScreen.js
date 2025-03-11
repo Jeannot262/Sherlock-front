@@ -8,15 +8,34 @@ import {
   Modal,
 } from "react-native";
 import React, { useState } from "react";
+import * as ImagePicker from "expo-image-picker";
+import { useDispatch } from 'react-redux';
+
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const dispatch = useDispatch()
 
   const handleLogin = () => {
     navigation.navigate("Home");
   };
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      const selectedImageUri = result.assets[0].uri;
+      setProfileImage(selectedImageUri);
+
+      dispatch(updateUser({ profileImage: selectedImageUri }));
+    }
+  };
+    
   return (
     <View style={styles.container}>
       {/* Image du titre */}
@@ -81,6 +100,12 @@ export default function LoginScreen({ navigation }) {
           style={styles.homeButton}
           onPress={() => navigation.goBack("Home")}>
           <Text style={styles.buttonHome}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={pickImage}>
+          <Text style={styles.buttonPhoto}>Modifier votre photo de profil</Text>
         </TouchableOpacity>
 
         {/* Bouton Modifier le mot de passe */}
@@ -183,7 +208,7 @@ const styles = StyleSheet.create({
   },
   squareContainer: {
     backgroundColor: "#8D6C50",
-    paddingVertical: 45,
+    paddingVertical: 0,
     borderRadius: 10,
     width: "90%",
     alignItems: "center",
@@ -200,9 +225,10 @@ const styles = StyleSheet.create({
   buttonRetour: {
     color: "#ffffff",
     fontSize: 18,
+    top: -150,
   },
   homeButton: {
-    top: -145,
+    top: -100,
     right: 130,
     backgroundColor: "#392A1D",
     paddingHorizontal: 15,
@@ -234,4 +260,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "white",
   },
+  buttonPhoto: {
+    color: "#ffffff",
+    height: 50,
+    fontWeight: "600",
+    fontSize: 20,
+  }
 });

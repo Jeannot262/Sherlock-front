@@ -12,7 +12,6 @@ import {
   Animated,
 } from "react-native";
 
-import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../reducers/user";
 
@@ -30,13 +29,12 @@ const { width: screenWidth } = Dimensions.get("window");
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const imageList = useSelector((state) => state.objectList?.value?.list) || [];
+  const profileImage = useSelector((state) => state.user.value.profileImage);
 
   console.log(
     "Redux state:",
     useSelector((state) => state.objectList)
   );
-
-  const [profileImage, setProfileImage] = useState(null);
 
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef(null);
@@ -69,16 +67,6 @@ export default function HomeScreen({ navigation }) {
     );
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
-    }
-  };
 
   console.log("imagelist=", imageList);
   return (
@@ -102,16 +90,16 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/SherlockTitre.png")}
           resizeMode="contain"
         />
-        <TouchableOpacity onPress={pickImage} activeOpacity={0.8}>
-          {profileImage ? (
-            <Image source={{ uri: profileImage }} style={styles.profileImage} />
-          ) : (
-            <Image
-              source={require("../assets/placeholder.png")}
-              style={styles.profileImage}
-            />
-          )}
-        </TouchableOpacity>
+         <View style={styles.profileContainer}>
+        {profileImage ? (
+          <Image source={{ uri: profileImage }} style={styles.profileImage} />
+        ) : (
+          <Image
+            source={require("../assets/placeholder.png")}
+            style={styles.profileImage}
+          />
+        )}
+      </View>
       </View>
       <View style={styles.carouselcontainer}>
         {imageList.length === 0 ? (

@@ -19,7 +19,7 @@
     "@react-navigation/bottom-tabs": "6",
     "@react-navigation/native": "6",
     "@react-navigation/native-stack": "6",
-    "@reduxjs/toolkit": "^2.6.0",
+    "@reduxjs/toolkit": "^2.6.1",
     "antd": "^5.24.2",
     "expo": "~52.0.37",
     "expo-camera": "^16.0.17",

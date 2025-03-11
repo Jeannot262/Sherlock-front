@@ -9,7 +9,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
-import object from "./reducers/object";
+//import object from "./reducers/object";
 import objectList from "./reducers/objectList";
 
 import AccountScreen from "./screens/AccountScreen";
@@ -24,7 +24,7 @@ import SharedScreen from "./screens/SharedScreen";
 import CameraScreen from "./screens/CameraScreen";
 
 const store = configureStore({
-  reducer: { user, object, objectList },
+  reducer: { user, objectList },
 });
 
 const Stack = createNativeStackNavigator();

@@ -6,7 +6,7 @@ import {Button} from "@ant-design/react-native";
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { updateObject, removePhoto } from "../reducers/object";
+//import { updateObject, removePhoto } from "../reducers/object";
 import { updateObjectList } from "../reducers/objectList";
 
 export default function ObjectScreen({ navigation }) {

@@ -5,6 +5,7 @@ const initialState = {
         _id : null,
         username : null,
         password : null,
+        profileImage : null,
     }
 };
 
@@ -16,6 +17,7 @@ export const userSlice = createSlice({
             state.value._id = action.payload._id;
             state.value.username = action.payload.username;
             state.value.password = action.payload.password;
+            state.value.profileImage = action.payload.profileImage;
             console.log(state.value._id);
         },
     }
