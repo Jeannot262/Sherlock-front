@@ -7,7 +7,7 @@ import { addObject, resetObject } from '../reducers/objectList';
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Button} from "@ant-design/react-native";
-import Toast from "react-native-simple-toast";
+//import Toast from "react-native-simple-toast";
 
 export default function NewObjectScreen({navigation}) {
   const dispatch = useDispatch();
@@ -30,13 +30,13 @@ export default function NewObjectScreen({navigation}) {
     setLoanedTo("");
   };
 
-  const showErrorToast = () => {
-    Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
-  };
+  // const showErrorToast = () => {
+  //   Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
+  // };
 
-  const showCreatedToast = () => {
-    Toast.show("Objet créé!", Toast.SHORT, Toast.CENTER);
-  };
+  // const showCreatedToast = () => {
+  //   Toast.show("Objet créé!", Toast.SHORT, Toast.CENTER);
+  // };
 
   const addNewObject = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/addObject`, {
@@ -50,12 +50,12 @@ export default function NewObjectScreen({navigation}) {
       {
         console.log(data.newObject);
         dispatch(addObject(data.newObject));
-        showCreatedToast();
+        //showCreatedToast();
       }
       else
       {
         console.log("Something went wrong!");
-        showErrorToast();
+        //showErrorToast();
       }
     })
   };

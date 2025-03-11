@@ -1,6 +1,6 @@
 import { StyleSheet, Switch, Text, Image, TouchableOpacity, TextInput, View } from "react-native";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import Toast from "react-native-simple-toast";
+//import Toast from "react-native-simple-toast";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {Button} from "@ant-design/react-native";
 
@@ -17,13 +17,13 @@ export default function ObjectScreen({ navigation }) {
   const [loaned, setLoaned] = useState(object.loanedTo !== "" ? true : false);
   const [loanedTo, setLoanedTo] = useState(object.loanedTo);
 
-  const showUpdateToast = () => {
-    Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
-  };
+  // const showUpdateToast = () => {
+  //   Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
+  // };
 
-  const showErrorToast = () => {
-    Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
-  };
+  // const showErrorToast = () => {
+  //   Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
+  // };
 
   const loanSwitch = () => {
     setLoaned(!loaned)
@@ -40,15 +40,13 @@ export default function ObjectScreen({ navigation }) {
     .then(data => {
       if(data.result)
       {
-        // console.log(data.update);
-        // console.log(object._id)
-        showUpdateToast();
+        //showUpdateToast();
         dispatch(updateObjectList(data.object));
       }
       else
       {
         console.log(data.error);
-        showErrorToast();
+        //showErrorToast();
       }
     })
   };

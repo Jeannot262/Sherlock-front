@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import {Button, Provider, Tooltip} from "@ant-design/react-native";
-import Toast from "react-native-simple-toast";
+//import Toast from "react-native-simple-toast";
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../reducers/user';
@@ -12,12 +12,12 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState("");
 
-  const showToast1 = () => {
-    Toast.show("Mot de passe mal confirmé!", Toast.SHORT, Toast.CENTER);
-  };
-  const showToast2 = () => {
-    Toast.show("Nom d'utilisateur indisponible!", Toast.SHORT, Toast.CENTER);
-  };
+  // const showToast1 = () => {
+  //   Toast.show("Mot de passe mal confirmé!", Toast.SHORT, Toast.CENTER);
+  // };
+  // const showToast2 = () => {
+  //   Toast.show("Nom d'utilisateur indisponible!", Toast.SHORT, Toast.CENTER);
+  // };
 
   const signupButtonClicked = () =>{
     if(password === confirmedPassword)
@@ -40,14 +40,14 @@ export default function SignUpScreen({ navigation }) {
           else
           {
             console.log("Something went wrong!");
-            showToast2();
+            //showToast2();
           }
         });
     }
     else
     {
       console.log("Make sure to confirm your password!"); 
-      showToast1();
+      //showToast1();
     }
   };
 

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, } from "react-native";
 import { Button, Provider } from "@ant-design/react-native";
-import Toast from "react-native-simple-toast";
+//import Toast from "react-native-simple-toast";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../reducers/user";
@@ -11,9 +11,9 @@ export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const showToast = () => {
-    Toast.show("Nom d'utilisateur ou mot de passe incorrect!", Toast.SHORT, Toast.CENTER);
-  };
+  // const showToast = () => {
+  //   Toast.show("Nom d'utilisateur ou mot de passe incorrect!", Toast.SHORT, Toast.CENTER);
+  // };
 
   const loginButtonClicked = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/login`, {
@@ -37,8 +37,7 @@ export default function LoginScreen({ navigation }) {
         } 
         else 
         {
-          //setNotConfirmed(true);
-          showToast();
+          //showToast();
           console.log("Something went wrong!");
         }
       });
@@ -69,14 +68,6 @@ export default function LoginScreen({ navigation }) {
           <Button onPress={() => loginButtonClicked()} style={styles.button}>
             <Text style={styles.buttonConnexion}>Connexion</Text>
           </Button>
-          {/* <Tooltip
-            content="Incorrect username or password!"
-            placement="top"
-            mode="dark"
-            crossOffset={{ top: 1 }}
-          >
-          </Tooltip> */}
-
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
