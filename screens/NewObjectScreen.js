@@ -1,135 +1,175 @@
-import { StyleSheet, Switch, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
-import { addObject, resetObject } from '../reducers/objectList';
-
+import { addObject, resetObject } from "../reducers/objectList";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Button} from "@ant-design/react-native";
-//import Toast from "react-native-simple-toast";
+import { Button } from "@ant-design/react-native";
 
-export default function NewObjectScreen({navigation}) {
+export default function NewObjectScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  const user = useSelector((state) => state.user.value); 
-  const object = useSelector((state) => state.objectList.value.object)
+  const user = useSelector((state) => state.user.value);
+  const object = useSelector((state) => state.objectList.value.object);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loaned, setLoaned] = useState(false);
   const [loanedTo, setLoanedTo] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch(resetObject());
     console.log(object);
-  }, [isFocused])
+  }, [isFocused]);
 
   const loanSwitch = () => {
-    setLoaned(!loaned)
+    setLoaned(!loaned);
     setLoanedTo("");
   };
 
-  // const showErrorToast = () => {
-  //   Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
-  // };
-
-  // const showCreatedToast = () => {
-  //   Toast.show("Objet créé!", Toast.SHORT, Toast.CENTER);
-  // };
-
   const addNewObject = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/addObject`, {
-    method : "POST",
-    headers : {"Content-Type" : "application/json"},
-    body : JSON.stringify({name : name, picture : object.picture, description : description, owner : user._id, loanedTo : loanedTo})
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.result)
+    fetch(
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/addObject`,
       {
-        console.log(data.newObject);
-        dispatch(addObject(data.newObject));
-        //showCreatedToast();
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+          picture: object.picture,
+          description: description,
+          owner: user._id,
+          loanedTo: loanedTo,
+        }),
       }
-      else
-      {
-        console.log("Something went wrong!");
-        //showErrorToast();
-      }
-    })
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          console.log(data.newObject);
+          dispatch(addObject(data.newObject));
+        } else {
+          console.log("Something went wrong!");
+        }
+      });
   };
-    
-    return (
-      <>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Image style={styles.logo} source={require("../assets/SherlockTitre.png")}/>
-            <TouchableOpacity
+
+  return (
+    <>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            style={styles.logo}
+            source={require("../assets/SherlockTitre.png")}
+          />
+          <TouchableOpacity
             style={styles.accountButton}
             onPress={() => navigation.navigate("Account")}
-            activeOpacity={0.8}>
-              <Text style={styles.textButton}>Profile</Text>
+            activeOpacity={0.8}
+          >
+            <Text style={styles.textButton}>Account</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.objectContainer} edges={[]}>
+          <View style={styles.row} edges={[]}>
+            <Text style={styles.text}>Nom</Text>
+            <TextInput
+              style={styles.nameInput}
+              placeholder="Nouvel Objet"
+              placeholderTextColor="grey"
+              onChangeText={(e) => setName(e)}
+              value={name}
+            ></TextInput>
+          </View>
+          <View style={styles.pictureRow} edges={[]}>
+            <Text style={styles.text}>Photo</Text>
+            <TouchableOpacity
+              style={styles.imageContainer}
+              onPress={() => navigation.navigate("CameraScreen")}
+            >
+              {loading ? (
+                <ActivityIndicator
+                  size="large"
+                  color="white"
+                  style={styles.loader}
+                />
+              ) : (
+                object.picture &&
+                object.picture !== "" && (
+                  <Image
+                    style={styles.image}
+                    source={{ uri: object.picture }}
+                    onLoadStart={() => setLoading(true)}
+                    onLoadEnd={() => setLoading(false)}
+                  />
+                )
+              )}
             </TouchableOpacity>
           </View>
-          <View style={styles.objectContainer} edges={[]}>
-            <View style={styles.row} edges={[]}>
-              <Text style={styles.text}>Nom</Text>
-              <TextInput 
-              style={styles.nameInput} 
-              placeholder="Nouvel Objet" 
-              placeholderTextColor="grey" 
-              onChangeText={(e) => setName(e)} 
-              value={name}>
-              </TextInput>
-            </View>
-            <View style={styles.pictureRow} edges={[]}>
-              <Text style={styles.text}>Photo</Text>
-              <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate("CameraScreen")}>
-                {object.picture && <Image style={styles.image} source={{uri : object.picture}}/>}
-              </TouchableOpacity>
-            </View>
-            <View style={styles.column} edges={[]}>
-              <Text style={styles.text}>Description</Text>
-              <TextInput 
-              style={styles.descriptionInput} 
-              placeholder="Où est situé l'objet?" 
-              placeholderTextColor="grey" 
-              multiline={true} 
-              textAlignVertical='top'
-              onChangeText={(e) => setDescription(e)} 
-              value={description}>                      
-              </TextInput>
-            </View>
-            <SafeAreaProvider>
-              <SafeAreaView style={styles.row} edges={[]}>
-                <Text style={styles.text}>Prêté?</Text>
-                <Image style={styles.pipe} source={loaned ? require("../assets/smoking-pipe.png") : require("../assets/darker-pipe.png")}/>
-                <Switch
-                trackColor={{false : "grey", true : "#392A1D"}}
+          <View style={styles.column} edges={[]}>
+            <Text style={styles.text}>Description</Text>
+            <TextInput
+              style={styles.descriptionInput}
+              placeholder="Où est situé l'objet?"
+              placeholderTextColor="grey"
+              multiline={true}
+              textAlignVertical="top"
+              onChangeText={(e) => setDescription(e)}
+              value={description}
+            ></TextInput>
+          </View>
+          <SafeAreaProvider>
+            <SafeAreaView style={styles.row} edges={[]}>
+              <Text style={styles.text}>Prêté?</Text>
+              <Image
+                style={styles.pipe}
+                source={
+                  loaned
+                    ? require("../assets/smoking-pipe.png")
+                    : require("../assets/darker-pipe.png")
+                }
+              />
+              <Switch
+                trackColor={{ false: "grey", true: "#392A1D" }}
                 thumbColor={loaned ? "#E9B78E" : "white"}
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
                 onValueChange={() => loanSwitch()}
-                value = {loaned}/>
-              </SafeAreaView>
-            </SafeAreaProvider>
-            {loaned && <TextInput
-              style={styles.loanInput} 
-              placeholder="A qui avez-vous prêté l'objet?" 
-              placeholderTextColor="grey" 
-              onChangeText={(e) => setLoanedTo(e)} 
-              value={loanedTo}>
-            </TextInput>}
-          </View>
-          <View style={styles.bottomBar} edges={[]}>
-            <Button style={styles.backButton} onPress={() => navigation.navigate("MyObjects")}>
-              <FontAwesome name='arrow-left' size={25} color="white"/>
-            </Button>
-            <Button style={styles.validateButton} onPress={() => addNewObject()}>
-              <Text style={styles.objectName}>Valider</Text>
-            </Button>
-          </View>
+                value={loaned}
+              />
+            </SafeAreaView>
+          </SafeAreaProvider>
+          {loaned && (
+            <TextInput
+              style={styles.loanInput}
+              placeholder="A qui avez-vous prêté l'objet?"
+              placeholderTextColor="grey"
+              onChangeText={(e) => setLoanedTo(e)}
+              value={loanedTo}
+            ></TextInput>
+          )}
         </View>
+        <View style={styles.bottomBar} edges={[]}>
+          <Button
+            style={styles.backButton}
+            onPress={() => navigation.navigate("MyObjects")}
+          >
+            <FontAwesome name="arrow-left" size={25} color="white" />
+          </Button>
+          <Button style={styles.validateButton} onPress={() => addNewObject()}>
+            <Text style={styles.objectName}>Valider</Text>
+          </Button>
+        </View>
+      </View>
     </>
   );
 }
@@ -155,6 +195,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 200,
     height: 50,
+    marginLeft: 70,
   },
 
   accountButton: {
@@ -162,10 +203,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
-    width: 70,
-    height: 70,
-    marginRight : 10,
-    marginTop : 15
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    marginTop: 15,
   },
 
   textButton: {
@@ -209,8 +250,6 @@ const styles = StyleSheet.create({
     width: "98%",
     height: 180,
     marginVertical: 10,
-    // borderWidth : 1,
-    // borderColor : "green"
   },
 
   nameInput: {
@@ -265,18 +304,24 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
-    width : 185,
-    height : 185,
-    borderRadius : 10,
-    borderWidth : 2,
-    borderColor : "white",
-    marginVertical : 30,
+    width: 185,
+    height: 185,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "white",
+    marginVertical: 30,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   image: {
     width: 180,
     height: 180,
     borderRadius: 10,
+  },
+
+  loader: {
+    position: "absolute",
   },
 
   pipe: {
