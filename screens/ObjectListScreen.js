@@ -75,14 +75,21 @@ export default function ObjectListScreen({ navigation }) {
           }}
         >
           <View>
-            <Text style={styles.objectName}>{data.name}</Text>
+            <Text style={styles.objectName}>
+              {data.name.length >= 16 ? data.name.slice(0, 16) + "..." : data.name}</Text>
             <Text style={styles.objectDescription}>
-              {data.description.length >= 20
-                ? data.description.slice(0, 20) + "..."
-                : data.description}
+              {data.description.length >= 23 ? data.description.slice(0, 23) + "..." : data.description}
             </Text>
           </View>
           <Image style={styles.image} source={{ uri: data.picture }} />
+          {data.sharedWith !== "" && (
+            <Image
+            style={styles.hat}
+            source={require("../assets/black-hat.png")}/>
+          )}
+          {data.sharedWith !== "" && (
+            <Text style={styles.sharedWith}>{data.sharedWith}</Text>
+          )}
           {data.loanedTo !== "" && (
             <Image
               style={styles.blackOpacity}
@@ -124,7 +131,7 @@ export default function ObjectListScreen({ navigation }) {
             onPress={() => navigation.navigate("Account")}
             activeOpacity={0.8}
           >
-            <Text style={styles.textButton}>Account</Text>
+            <Text style={styles.textButton}>Profile</Text>
           </TouchableOpacity>
         </View>
         <SafeAreaView style={styles.objectPanel}>
@@ -167,7 +174,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 250,
     height: 100,
-    marginLeft: 70,
   },
 
   accountButton: {
@@ -266,6 +272,23 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: 95,
     marginLeft: 310,
+  },
+
+  hat: {
+    position: "absolute",
+    width: 60,
+    height: 50,
+    marginTop: 90,
+    marginLeft:10,
+  },
+
+  sharedWith : {
+    position : "absolute",
+    marginTop: 95,
+    marginLeft: 80,
+    fontWeight: "600",
+    color: "white",
+    fontSize: 20,
   },
 
   title: {

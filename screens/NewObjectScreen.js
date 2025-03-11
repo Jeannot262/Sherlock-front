@@ -77,7 +77,7 @@ export default function NewObjectScreen({ navigation }) {
             onPress={() => navigation.navigate("Account")}
             activeOpacity={0.8}
           >
-            <Text style={styles.textButton}>Account</Text>
+            <Text style={styles.textButton}>Profile</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.objectContainer} edges={[]}>
@@ -97,23 +97,20 @@ export default function NewObjectScreen({ navigation }) {
               style={styles.imageContainer}
               onPress={() => navigation.navigate("CameraScreen")}
             >
-              {loading ? (
+              {loading ? 
                 <ActivityIndicator
                   size="large"
                   color="white"
                   style={styles.loader}
+                /> : 
+                object.picture === null ? <></> : 
+                <Image
+                  style={styles.image}
+                  source={{ uri: object.picture }}
+                  onLoadStart={() => setLoading(true)}
+                  onLoadEnd={() => setLoading(false)}
                 />
-              ) : (
-                object.picture &&
-                object.picture !== "" && (
-                  <Image
-                    style={styles.image}
-                    source={{ uri: object.picture }}
-                    onLoadStart={() => setLoading(true)}
-                    onLoadEnd={() => setLoading(false)}
-                  />
-                )
-              )}
+              }
             </TouchableOpacity>
           </View>
           <View style={styles.column} edges={[]}>
@@ -144,32 +141,26 @@ export default function NewObjectScreen({ navigation }) {
                 thumbColor={loaned ? "#E9B78E" : "white"}
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
                 onValueChange={() => loanSwitch()}
-                value={loaned}
-              />
-            </SafeAreaView>
-          </SafeAreaProvider>
-          {loaned && (
-            <TextInput
-              style={styles.loanInput}
-              placeholder="A qui avez-vous prêté l'objet?"
-              placeholderTextColor="grey"
-              onChangeText={(e) => setLoanedTo(e)}
-              value={loanedTo}
-            ></TextInput>
-          )}
+                value = {loaned}/>
+              </SafeAreaView>
+            </SafeAreaProvider>
+            {loaned && <TextInput
+              style={styles.loanInput} 
+              placeholder="A qui avez-vous prêté l'objet?" 
+              placeholderTextColor="grey" 
+              onChangeText={(e) => setLoanedTo(e)} 
+              value={loanedTo}>
+            </TextInput>}
+          </View>
+          <View style={styles.bottomBar} edges={[]}>
+            <Button style={styles.backButton} onPress={() => navigation.navigate("TabNavigator", {screen : "Mes Objets"})}>
+              <FontAwesome name='arrow-left' size={25} color="white"/>
+            </Button>
+            <Button style={styles.validateButton} onPress={() => addNewObject()}>
+              <Text style={styles.objectName}>Valider</Text>
+            </Button>
+          </View>
         </View>
-        <View style={styles.bottomBar} edges={[]}>
-          <Button
-            style={styles.backButton}
-            onPress={() => navigation.navigate("MyObjects")}
-          >
-            <FontAwesome name="arrow-left" size={25} color="white" />
-          </Button>
-          <Button style={styles.validateButton} onPress={() => addNewObject()}>
-            <Text style={styles.objectName}>Valider</Text>
-          </Button>
-        </View>
-      </View>
     </>
   );
 }
