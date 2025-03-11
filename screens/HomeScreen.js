@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Image,
   KeyboardAvoidingView,
-  Platform,
   Dimensions,
   FlatList,
   Animated,
@@ -14,27 +13,20 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../reducers/user";
+import { updateObjectList } from "../reducers/objectList";
 
 const { width: screenWidth } = Dimensions.get("window");
 
-// const images = [
-//   require("../assets/cable-ethernet.jpg"),
-//   require("../assets/jumelles.jpg"),
-//   require("../assets/clefs.jpg"),
-//   require("../assets/medicaments.jpg"),
-//   require("../assets/bijoux.jpg"),
-//   require("../assets/perceuse.jpg"),
-// ];
-
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
-  const imageList = useSelector((state) => state.objectList?.value?.list) || [];
   const profileImage = useSelector((state) => state.user.value.profileImage);
 
   console.log(
     "Redux state:",
     useSelector((state) => state.objectList)
   );
+  const objectList =
+    useSelector((state) => state.objectList?.value?.list) || [];
 
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef(null);
@@ -42,11 +34,11 @@ export default function HomeScreen({ navigation }) {
   const autoScroll = useRef(true);
 
   useEffect(() => {
-    if (!imageList || imageList.length === 0) return;
+    if (!objectList || objectList.length === 0) return;
 
     const interval = setInterval(() => {
       if (autoScroll.current && flatListRef.current) {
-        currentIndex.current = (currentIndex.current + 1) % imageList.length;
+        currentIndex.current = (currentIndex.current + 1) % objectList.length;
         flatListRef.current.scrollToIndex({
           index: currentIndex.current,
           animated: true,
@@ -55,7 +47,7 @@ export default function HomeScreen({ navigation }) {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [imageList.length]);
+  }, [objectList.length]);
 
   const logoutPressed = () => {
     dispatch(
@@ -67,8 +59,10 @@ export default function HomeScreen({ navigation }) {
     );
   };
 
-
-  console.log("imagelist=", imageList);
+  const navigateToObject = (object) => {
+    dispatch(updateObjectList(object));
+    navigation.navigate("Object", { object });
+  };
   return (
     <KeyboardAvoidingView
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -90,24 +84,24 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/SherlockTitre.png")}
           resizeMode="contain"
         />
-         <View style={styles.profileContainer}>
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.profileImage} />
-        ) : (
-          <Image
-            source={require("../assets/placeholder.png")}
-            style={styles.profileImage}
-          />
-        )}
-      </View>
+        <View style={styles.profileContainer}>
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          ) : (
+            <Image
+              source={require("../assets/placeholder.png")}
+              style={styles.profileImage}
+            />
+          )}
+        </View>
       </View>
       <View style={styles.carouselcontainer}>
-        {imageList.length === 0 ? (
+        {objectList.length === 0 ? (
           <Text>Aucune image disponible</Text>
         ) : (
           <FlatList
             ref={flatListRef}
-            data={imageList}
+            data={objectList}
             keyExtractor={(item, index) => index.toString()}
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -140,16 +134,19 @@ export default function HomeScreen({ navigation }) {
                 extrapolate: "clamp",
               });
               return (
-                <View style={styles.carouselItem}>
+                <TouchableOpacity
+                  style={styles.carouselItem}
+                  onPress={() => navigateToObject(item)}
+                >
                   <Animated.Image
-                    source={{ uri: item }}
+                    source={{ uri: item.picture }}
                     style={[
                       styles.carouselImage,
                       { transform: [{ scale }], opacity },
                     ]}
                     resizeMode="cover"
                   />
-                </View>
+                </TouchableOpacity>
               );
             }}
           />
@@ -232,15 +229,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
-    // padding: 8,
     marginTop: 10,
     height: 60,
     width: 60,
-    // marginRight: 30,
   },
   textAccountButton: {
     fontSize: 10,
-    color: "white", //"#E9B78E",
+    color: "white",
     fontWeight: "bold",
   },
   carouselcontainer: {
@@ -304,13 +299,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#392A1D",
     alignItems: "center",
     justifyContent: "center",
-    // fontcolor: "white",
     borderRadius: 10,
     padding: 8,
     margin: 10,
     marginBottom: 40,
     height: 90,
-    // flexDirection: "row",
   },
 
   textButton: {
@@ -327,15 +320,16 @@ const styles = StyleSheet.create({
     margin: 10,
     height: 100,
   },
-  // buttonContent: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  // },
   profileImage: {
-    height: 40,
-    width: 40,
+    height: 80,
+    width: 80,
     marginRight: 30,
     borderRadius: 20,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    position: "absolute",
   },
 });

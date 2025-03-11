@@ -7,7 +7,6 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@ant-design/react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -73,11 +72,14 @@ export default function ObjectListScreen({ navigation }) {
                 owner: data.owner,
               })
             );
-          }}>
+          }}
+        >
           <View>
             <Text style={styles.objectName}>{data.name}</Text>
             <Text style={styles.objectDescription}>
-              {data.description.length >= 20 ? data.description.slice(0, 20) + "..." : data.description}
+              {data.description.length >= 20
+                ? data.description.slice(0, 20) + "..."
+                : data.description}
             </Text>
           </View>
           <Image style={styles.image} source={{ uri: data.picture }} />
@@ -99,10 +101,12 @@ export default function ObjectListScreen({ navigation }) {
         </TouchableOpacity>
       );
     });
-  } else { 
+  } else {
     objectsDisplayed = (
       <View>
-        <Text style={styles.objectName}>You haven't stored any object yet!</Text>
+        <Text style={styles.objectName}>
+          You haven't stored any object yet!
+        </Text>
       </View>
     );
   }
