@@ -1,46 +1,120 @@
-import React, { useRef, useEffect } from "react";
 import {
   TouchableOpacity,
   View,
   Text,
   StyleSheet,
   Image,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   TextInput,
 } from "react-native";
+import { Button } from "@ant-design/react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateObjectList } from "../reducers/objectList";
 
 export default function SharedScreen({ navigation }) {
-  //     const object = objectData.map((data, i) => {
-  //       return (
-  //         <View key={i} style={styles.card}>
-  //           <Text style={styles.name}>{data.name}</Text>
-  //         </View>
-  //       );
+  const dispatch = useDispatch();
+  const objectList = useSelector((state) => state.objectList.value.list);
+  const object = useSelector(state => state.objectList.value.object);
+  const shareWith = useSelector(state => state.sharedWithUser.value);
+  
+  let objectsDisplayed;
+    if (objectList !== null) {
+      objectsDisplayed = objectList.map((data, i) => {
+        return (
+          <TouchableOpacity
+            key={i}
+            style={styles.objectContainer}
+            onPress={() => {
+              dispatch(
+                updateObjectList({
+                  _id: data._id,
+                  name: data.name,
+                  picture: data.picture,
+                  description: data.description,
+                  loanedTo: data.loanedTo,
+                  sharedWith: data.sharedWith,
+                  owner: data.owner,
+                }));
+            }}>
+            <View>
+              <Text style={styles.objectName}>
+                {data.name.length >= 16 ? data.name.slice(0, 16) + "..." : data.name}
+              </Text>
+              <Text style={styles.objectDescription}>
+                {data.description.length >= 23 ? data.description.slice(0, 23) + "..." : data.description}
+              </Text>
+            </View>
+            <Image style={styles.image} source={{ uri: data.picture }} />
+            {data.sharedWith !== "" && (
+              <Image
+                style={styles.hat}
+                source={require("../assets/black-hat.png")}
+              />
+            )}
+            {data.sharedWith !== "" && (
+              <Text style={styles.sharedWith}>{data.sharedWith}</Text>
+            )}
+            {data.loanedTo !== "" && (
+              <Image
+                style={styles.blackOpacity}
+                source={require("../assets/blackOpacity.png")}
+              />
+            )}
+            {data.loanedTo !== "" && (
+              <Image
+                style={styles.pipe}
+                source={require("../assets/smoking-pipe.png")}
+              />
+            )}
+          </TouchableOpacity>
+        );
+      });
+    } else { 
+      objectsDisplayed = (
+        <View>
+          <Text style={styles.objectName}>You haven't stored any object yet!</Text>
+        </View>
+      );
+    }
 
-  //   });
+  const validateButtonClicked = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/shareWith/${shareWith}`, {
+      method : "PUT",
+      headers : { "Content-Type" : "application/json"},
+      body : JSON.stringify({name : object.name, owner : object.owner})
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.result)
+      {
+        console.log("Object Sahred !!", data.update);
+        navigation.navigate("TabNavigator", {screen : "Partager"})
+      }
+      else
+      {
+        console.log("error");
+      }
+    });
+  };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          style={styles.homeButton}
-          onPress={() => navigation.navigate("Home")}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButton}>Home</Text>
-        </TouchableOpacity>
+    <SafeAreaProvider style={styles.container}>
+      <View style={styles.header}>
         <Image
           style={styles.logo}
           source={require("../assets/SherlockTitre.png")}
-          resizeMode="contain"
         />
+        <TouchableOpacity
+        style={styles.accountButton}
+        onPress={() => navigation.navigate("Account")}
+        activeOpacity={0.8}>
+          <Text style={styles.textButton}>Profile</Text>
+        </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Que Voulez vous partager?</Text>
+      <Text style={styles.title}>Que voulez-vous partager avec {shareWith} ?</Text>
       <Image
         style={styles.imageButton}
         source={require("../assets/black-hat.png")}
@@ -49,65 +123,62 @@ export default function SharedScreen({ navigation }) {
       <View style={styles.searchContainer}>
         <TextInput style={styles.input} placeholder="Rechercher" />
       </View>
-      <View style={styles.objectContainer}>
-        <Text style={styles.resultTitle}>Résultat</Text>
-        <ScrollView contentContainerStyle={styles.scrollView}></ScrollView>
+      <SafeAreaView style={styles.objectPanel}>
+        <ScrollView showsVerticalScrollIndicator={true}>
+          {objectsDisplayed}
+        </ScrollView>
+      </SafeAreaView>
+      <View style={styles.bottomBar}>
+        <Button
+        style={styles.addButton}
+        onPress={() => validateButtonClicked()}>
+          <Text style={styles.objectName}>Valider</Text>
+        </Button>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: "#E9B78E",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+
+  header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    marginBottom: 20,
-    marginTop: 20,
-    marginLeft: 10,
-    borderBottomColor: "#000000",
+    height: 120,
     borderBottomWidth: 1,
+    borderColor: "#392A1D",
   },
-  homeButton: {
+
+  logo: {
+    width: 250,
+    height: 100,
+  },
+
+  accountButton: {
     backgroundColor: "#392A1D",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 20,
-    // padding: 8,
-    marginTop: 10,
-    height: 40,
-    width: 100,
+    borderRadius: 50,
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    marginTop: 15,
   },
-  logo: {
-    width: 225,
-    height: 75,
-    marginTop: 10,
-  },
-  //   accountButton: {
-  //     backgroundColor: "#392A1D",
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //     borderRadius: 20,
-  //     // padding: 8,
-  //     marginTop: 10,
-  //     height: 60,
-  //     width: 60,
-  //     // marginRight: 30,
-  //   },
+
   textButton: {
     fontSize: 20,
-    color: "white", //"#E9B78E",
+    color: "white",
     fontWeight: "bold",
   },
 
-  container: {
-    flex: 1,
-    backgroundColor: "#E9B78E",
-    alignItems: "center",
-    justifyContent: "center",
-    fontcolor: "white",
-  },
   title: {
     color: "black",
     fontSize: 25,
@@ -123,11 +194,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  logo: {
-    width: 225,
-    height: 75,
-    marginTop: 10,
-  },
 
   searchContainer: {
     backgroundColor: "white",
@@ -137,49 +203,124 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: "90%",
     padding: 10,
-    marginBottom: 40,
+    marginBottom: 20,
     width: "90%",
     height: 40,
   },
-  objectContainer: {
-    flex: 1,
-    backgroundColor: "#8D6C50",
-    alignItems: "justify",
-    justifyContent: "center",
-    fontcolor: "white",
+
+  objectPanel: {
+    width: "98%",
+    height: "45%",
+    backgroundColor: "#8c6c51",
     borderRadius: 10,
-    width: "90%",
+  },
+
+  objectContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "95%",
+    height: 150,
     padding: 10,
-    marginBottom: 40,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: "#392A1D",
+    borderRadius: 10,
+  },
+
+  selectedObjectContainer : {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "95%",
+    height: 150,
+    padding: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: "#392A1D",
+    borderRadius: 10,
+    borderWidth : 5,
+    borderColor : "white"
   },
 
   scrollView: {
     alignItems: "center",
     paddingBottom: 20,
   },
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "80%",
-    backgroundColor: "#ffffff",
-    padding: 20,
-    marginTop: 20,
-    borderRadius: 10,
-  },
-  name: {
+  
+  objectDescription: {
+    fontWeight: "600",
+    color: "#dfceb0",
     fontSize: 20,
-    fontWeight: "bold",
+    marginTop: 10,
   },
-  input: {
-    // width: "65%",
-    marginTop: 6,
-    borderBottomColor: "grey",
-    borderBottomWidth: 1,
-    fontSize: 16,
+
+  image: {
+    position: "absolute",
+    width: 120,
+    height: 120,
+    borderRadius: 10,
+    marginLeft: 235,
+    marginTop: 15,
   },
+
+  blackOpacity: {
+    position: "absolute",
+    width: 121,
+    height: 121,
+    borderRadius: 10,
+    marginLeft: 235,
+    marginTop: 15,
+  },
+
+  pipe: {
+    position: "absolute",
+    width: 50,
+    height: 50,
+    marginTop: 95,
+    marginLeft: 310,
+  },
+ 
+  hat: {
+    position: "absolute",
+    width: 60,
+    height: 50,
+    marginTop: 90,
+    marginLeft:10,
+  },
+
+  sharedWith : {
+    position : "absolute",
+    marginTop: 95,
+    marginLeft: 80,
+    fontWeight: "600",
+    color: "white",
+    fontSize: 20,
+  },
+  
   imageButton: {
     width: 100,
     height: 100,
+  },
+
+  objectName: {
+    fontWeight: "800",
+    color: "white",
+    fontSize: 30,
+  },
+
+  bottomBar: {
+    flexDirection: "row-reverse",
+    width: "100%",
+    justifyContent: "space-around",
+  },
+
+  addButton: {
+    width: 300,
+    height: 70,
+    marginTop: 20,
+    backgroundColor: "#392A1D",
   },
 });

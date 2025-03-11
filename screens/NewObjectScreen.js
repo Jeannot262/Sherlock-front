@@ -86,7 +86,7 @@ export default function NewObjectScreen({navigation}) {
             <View style={styles.pictureRow} edges={[]}>
               <Text style={styles.text}>Photo</Text>
               <TouchableOpacity style={styles.imageContainer} onPress={() => navigation.navigate("CameraScreen")}>
-                {object.picture && <Image style={styles.image} source={{uri : object.picture}}/>}
+                {object.picture === null ? <></> : <Image style={styles.image} source={{uri : object.picture}}/>}
               </TouchableOpacity>
             </View>
             <View style={styles.column} edges={[]}>
@@ -122,7 +122,7 @@ export default function NewObjectScreen({navigation}) {
             </TextInput>}
           </View>
           <View style={styles.bottomBar} edges={[]}>
-            <Button style={styles.backButton} onPress={() => navigation.navigate("MyObjects")}>
+            <Button style={styles.backButton} onPress={() => navigation.navigate("TabNavigator", {screen : "Mes Objets"})}>
               <FontAwesome name='arrow-left' size={25} color="white"/>
             </Button>
             <Button style={styles.validateButton} onPress={() => addNewObject()}>

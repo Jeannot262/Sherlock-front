@@ -9,8 +9,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
-import object from "./reducers/object";
 import objectList from "./reducers/objectList";
+import sharedWithUser from "./reducers/sharedWithUser";
 
 import AccountScreen from "./screens/AccountScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -21,10 +21,12 @@ import ObjectListScreen from "./screens/ObjectListScreen";
 import ObjectScreen from "./screens/ObjectScreen";
 import NewObjectScreen from "./screens/NewObjectScreen";
 import SharedScreen from "./screens/SharedScreen";
+import SharedToScreen from "./screens/SharedToScreen";
 import CameraScreen from "./screens/CameraScreen";
+import CancelShareScreen from "./screens/CancelShareScreen";
 
 const store = configureStore({
-  reducer: { user, object, objectList },
+  reducer: { user, objectList, sharedWithUser },
 });
 
 const Stack = createNativeStackNavigator();
@@ -39,11 +41,11 @@ const TabNavigator = () => {
         {
           iconName = "home";
         }
-        else if(route.name === "MyObjects")
+        else if(route.name === "Mes Objets")
         {
           iconName = "cubes";
         }
-        else if(route.name === "Shared")
+        else if(route.name === "Partager")
         {
           iconName = "share";
         }
@@ -56,8 +58,8 @@ const TabNavigator = () => {
       tabBarInactiveBackgroundColor : "#392A1D",
     })}>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="MyObjects" component={ObjectListScreen}/>
-      <Tab.Screen name="Shared" component={SharedScreen}/>
+      <Tab.Screen name="Mes Objets" component={ObjectListScreen}/>
+      <Tab.Screen name="Partager" component={SharedToScreen}/>
     </Tab.Navigator>
   );
 };
@@ -77,9 +79,8 @@ export default function App() {
           <Stack.Screen name="CameraScreen" component={CameraScreen} />
           <Stack.Screen name="Account" component={AccountScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator}/>
-          {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
-          {/* <Stack.Screen name="Shared" component={SharedScreen} /> */}
-          {/* <Stack.Screen name="MyObjects" component={ObjectListScreen} /> */}
+          <Stack.Screen name="Share" component={SharedScreen}/>
+          <Stack.Screen name="CancelShare" component={CancelShareScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

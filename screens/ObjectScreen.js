@@ -2,11 +2,11 @@ import { StyleSheet, Switch, Text, Image, TouchableOpacity, TextInput, View } fr
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 //import Toast from "react-native-simple-toast";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import {Button} from "@ant-design/react-native";
+import {Button, Toast} from "@ant-design/react-native";
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { updateObject, removePhoto } from "../reducers/object";
+// import { updateObject, removePhoto } from "../reducers/object";
 import { updateObjectList } from "../reducers/objectList";
 
 export default function ObjectScreen({ navigation }) {
@@ -17,13 +17,15 @@ export default function ObjectScreen({ navigation }) {
   const [loaned, setLoaned] = useState(object.loanedTo !== "" ? true : false);
   const [loanedTo, setLoanedTo] = useState(object.loanedTo);
 
-  // const showUpdateToast = () => {
-  //   Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
-  // };
+  const showUpdateToast = () => {
+    //Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
+    Toast.show({content : "Objet Modifié!", position : "top"});
+  };
 
-  // const showErrorToast = () => {
-  //   Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
-  // };
+  const showErrorToast = () => {
+    //Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
+    Toast.show({content : "Donnez un nom et une description à votre objet!", position : "top"});
+  };
 
   const loanSwitch = () => {
     setLoaned(!loaned)
@@ -41,12 +43,14 @@ export default function ObjectScreen({ navigation }) {
       if(data.result)
       {
         //showUpdateToast();
+        Toast.show({content : "Objet Modifié!", position : "top"});
         dispatch(updateObjectList(data.object));
       }
       else
       {
-        console.log(data.error);
         //showErrorToast();
+        Toast.show({content : "Donnez un nom et une description à votre objet!", position : "top"});
+        console.log(data.error);
       }
     })
   };
@@ -113,7 +117,7 @@ export default function ObjectScreen({ navigation }) {
           </TextInput>}
         </View>
         <View style={styles.bottomBar} edges={[]}>
-          <Button style={styles.backButton} onPress={() => navigation.navigate("TabNavigator", {screen : "MyObjects"})}>
+          <Button style={styles.backButton} onPress={() => navigation.navigate("TabNavigator", {screen : "Mes Objets"})}>
             <FontAwesome name='arrow-left' size={25} color="white"/>
           </Button>
           <Button style={styles.validateButton} onPress={() => validateButtonPressed()}>
