@@ -32,33 +32,30 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
-  return(
-    <Tab.Navigator screenOptions={({route}) => ({
-      tabBarIcon : ({size}) => {
-        let iconName = "";
-        if(route.name === "Home")
-        {
-          iconName = "home";
-        }
-        else if(route.name === "Mes Objets")
-        {
-          iconName = "cubes";
-        }
-        else if(route.name === "Partager")
-        {
-          iconName = "share";
-        }
-        return(<FontAwesome name={iconName} size={size} color="white"/>);
-      },
-      tabBarActiveTintColor : "white",
-      tabBarInactiveTintColor: '#8D6C50',
-      headerShown: false,
-      tabBarActiveBackgroundColor : "#8D6C50",
-      tabBarInactiveBackgroundColor : "#392A1D",
-    })}>
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ size }) => {
+          let iconName = "";
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Mes Objets") {
+            iconName = "cubes";
+          } else if (route.name === "Partager") {
+            iconName = "share";
+          }
+          return <FontAwesome name={iconName} size={size} color="white" />;
+        },
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "#8D6C50",
+        headerShown: false,
+        tabBarActiveBackgroundColor: "#8D6C50",
+        tabBarInactiveBackgroundColor: "#392A1D",
+      })}
+    >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Mes Objets" component={ObjectListScreen}/>
-      <Tab.Screen name="Partager" component={SharedToScreen}/>
+      <Tab.Screen name="Mes Objets" component={ObjectListScreen} />
+      <Tab.Screen name="Partager" component={SharedToScreen} />
     </Tab.Navigator>
   );
 };
@@ -78,8 +75,8 @@ export default function App() {
           <Stack.Screen name="NewObject" component={NewObjectScreen} />
           <Stack.Screen name="CameraScreen" component={CameraScreen} />
           <Stack.Screen name="Account" component={AccountScreen} />
-          <Stack.Screen name="TabNavigator" component={TabNavigator}/>
-          <Stack.Screen name="Share" component={SharedScreen}/>
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Screen name="Share" component={SharedScreen} />
           <Stack.Screen name="CancelShare" component={CancelShareScreen} />
         </Stack.Navigator>
       </NavigationContainer>

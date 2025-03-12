@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
   Image,
   TouchableOpacity,
@@ -23,7 +24,8 @@ export default function ObjectListScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user.value);
-  const objectList = useSelector((state) => state.objectList.value.list);
+  const objectList = useSelector((state) => state.objectList.value.list) || []; // Initialize with an empty array
+  const [searchObject, setSearchObject] = useState("");
 
   useEffect(() => {
     fetch(
@@ -52,9 +54,13 @@ export default function ObjectListScreen({ navigation }) {
       });
   };
 
+  const filteredObjectList = objectList.filter((object) =>
+    object.name.includes(searchObject)
+  );
+
   let objectsDisplayed;
-  if (objectList !== null) {
-    objectsDisplayed = objectList.map((data, i) => {
+  if (filteredObjectList.length > 0) {
+    objectsDisplayed = filteredObjectList.map((data, i) => {
       return (
         <TouchableOpacity
           key={i}
@@ -76,16 +82,22 @@ export default function ObjectListScreen({ navigation }) {
         >
           <View>
             <Text style={styles.objectName}>
-              {data.name.length >= 16 ? data.name.slice(0, 16) + "..." : data.name}</Text>
+              {data.name.length >= 16
+                ? data.name.slice(0, 16) + "..."
+                : data.name}
+            </Text>
             <Text style={styles.objectDescription}>
-              {data.description.length >= 23 ? data.description.slice(0, 23) + "..." : data.description}
+              {data.description.length >= 23
+                ? data.description.slice(0, 23) + "..."
+                : data.description}
             </Text>
           </View>
           <Image style={styles.image} source={{ uri: data.picture }} />
           {data.sharedWith !== "" && (
             <Image
-            style={styles.hat}
-            source={require("../assets/black-hat.png")}/>
+              style={styles.hat}
+              source={require("../assets/black-hat.png")}
+            />
           )}
           {data.sharedWith !== "" && (
             <Text style={styles.sharedWith}>{data.sharedWith}</Text>
@@ -112,7 +124,7 @@ export default function ObjectListScreen({ navigation }) {
     objectsDisplayed = (
       <View>
         <Text style={styles.objectName}>
-          You haven't stored any object yet!
+          Aucun objet trouvé! Une faute de frappe peut-être?
         </Text>
       </View>
     );
@@ -136,6 +148,13 @@ export default function ObjectListScreen({ navigation }) {
         </View>
         <SafeAreaView style={styles.objectPanel}>
           <Text style={styles.title}>Mes objets</Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Rechercher un objet"
+            placeholderTextColor="grey"
+            onChangeText={(text) => setSearchObject(text)}
+            value={searchObject}
+          />
           <ScrollView showsVerticalScrollIndicator={true}>
             {objectsDisplayed}
           </ScrollView>
@@ -199,6 +218,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#8c6c51",
     borderRadius: 10,
     marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   objectContainer: {
@@ -279,11 +300,11 @@ const styles = StyleSheet.create({
     width: 60,
     height: 50,
     marginTop: 90,
-    marginLeft:10,
+    marginLeft: 10,
   },
 
-  sharedWith : {
-    position : "absolute",
+  sharedWith: {
+    position: "absolute",
     marginTop: 95,
     marginLeft: 80,
     fontWeight: "600",
@@ -297,5 +318,15 @@ const styles = StyleSheet.create({
     fontWeight: 800,
     marginBottom: 10,
     textAlign: "center",
+  },
+  searchInput: {
+    width: "90%",
+    height: 50,
+    backgroundColor: "#392A1D",
+    borderRadius: 10,
+    color: "white",
+    textAlign: "center",
+    fontSize: 20,
+    marginBottom: 10,
   },
 });

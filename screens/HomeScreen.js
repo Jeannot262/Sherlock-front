@@ -19,6 +19,7 @@ const { width: screenWidth } = Dimensions.get("window");
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
   const profileImage = useSelector((state) => state.user.value.profileImage);
 
   console.log(
@@ -94,6 +95,9 @@ export default function HomeScreen({ navigation }) {
             />
           )}
         </View>
+      </View>
+      <View>
+        <Text style={styles.username}>Bienvenue {user.username}</Text>
       </View>
       <View style={styles.carouselcontainer}>
         {objectList.length === 0 ? (
@@ -302,7 +306,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 8,
     margin: 10,
-    marginBottom: 40,
+    marginBottom: 20,
+    marginTop: 10,
     height: 90,
   },
 
@@ -331,5 +336,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     position: "absolute",
+  },
+  username: {
+    // marginBottom: 20,
+    fontSize: 30,
+    fontWeight: "bold",
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 17,
   },
 });

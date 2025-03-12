@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { Button, Provider } from "@ant-design/react-native";
 //import Toast from "react-native-simple-toast";
 import React, { useState } from "react";
@@ -33,10 +40,8 @@ export default function LoginScreen({ navigation }) {
           );
           setUsername("");
           setPassword("");
-          navigation.navigate("TabNavigator", {screen : "Partager"});
-        } 
-        else 
-        {
+          navigation.navigate("TabNavigator", { screen: "Home" });
+        } else {
           //showToast();
           console.log("Something went wrong!");
         }
