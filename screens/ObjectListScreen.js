@@ -18,12 +18,14 @@ import {
 } from "../reducers/objectList";
 
 import { useIsFocused } from "@react-navigation/native";
+import { updateUser } from "../reducers/user";
 
 export default function ObjectListScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user.value);
   const objectList = useSelector((state) => state.objectList.value.list);
+  const profileImage = useSelector((state) => state.user.value.profileImage);
 
   useEffect(() => {
     fetch(
@@ -126,13 +128,16 @@ export default function ObjectListScreen({ navigation }) {
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
           />
-          <TouchableOpacity
-            style={styles.accountButton}
-            onPress={() => navigation.navigate("Account")}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButton}>Profile</Text>
-          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+        {profileImage ? (
+          <Image
+            source={{ uri: profileImage }}
+            style={styles.profileImage}
+          />
+        ) : (
+          <Image style={styles.profileImage} />
+        )}
+      </TouchableOpacity>
         </View>
         <SafeAreaView style={styles.objectPanel}>
           <Text style={styles.title}>Mes objets</Text>
@@ -297,5 +302,11 @@ const styles = StyleSheet.create({
     fontWeight: 800,
     marginBottom: 10,
     textAlign: "center",
+  },
+  profileImage: {
+    height: 50,
+    width: 50,
+    marginRight: 30,
+    borderRadius: 30,
   },
 });

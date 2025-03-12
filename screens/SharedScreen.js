@@ -19,6 +19,7 @@ export default function SharedScreen({ navigation }) {
   const objectList = useSelector((state) => state.objectList.value.list);
   const object = useSelector(state => state.objectList.value.object);
   const shareWith = useSelector(state => state.sharedWithUser.value);
+  const profileImage = useSelector((state) => state.user.value.profileImage);
   
   let objectsDisplayed;
     if (objectList !== null) {
@@ -107,12 +108,16 @@ export default function SharedScreen({ navigation }) {
           style={styles.logo}
           source={require("../assets/SherlockTitre.png")}
         />
-        <TouchableOpacity
-        style={styles.accountButton}
-        onPress={() => navigation.navigate("Account")}
-        activeOpacity={0.8}>
-          <Text style={styles.textButton}>Profile</Text>
-        </TouchableOpacity>
+       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+        {profileImage ? (
+          <Image
+            source={{ uri: profileImage }}
+            style={styles.profileImage}
+          />
+        ) : (
+          <Image style={styles.profileImage} />
+        )}
+      </TouchableOpacity>
       </View>
       <Text style={styles.title}>Que voulez-vous partager avec {shareWith} ?</Text>
       <Image
@@ -322,5 +327,11 @@ const styles = StyleSheet.create({
     height: 70,
     marginTop: 20,
     backgroundColor: "#392A1D",
+  },
+  profileImage: {
+    height: 50,
+    width: 50,
+    marginRight: 30,
+    borderRadius: 30,
   },
 });

@@ -24,6 +24,7 @@ export default function ObjectScreen({ navigation }) {
   const [loaned, setLoaned] = useState(object.loanedTo !== "" ? true : false);
   const [loanedTo, setLoanedTo] = useState(object.loanedTo);
   const [loading, setLoading] = useState(false);
+  const profileImage = useSelector((state) => state.user.value.profileImage);
 
   const showUpdateToast = () => {
     //Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
@@ -75,13 +76,16 @@ export default function ObjectScreen({ navigation }) {
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
           />
-          <TouchableOpacity
-            style={styles.accountButton}
-            onPress={() => navigation.navigate("Account")}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButton}>Account</Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+        {profileImage ? (
+          <Image
+            source={{ uri: profileImage }}
+            style={styles.profileImage}
+          />
+        ) : (
+          <Image style={styles.profileImage} />
+        )}
+      </TouchableOpacity>
         </View>
         <View style={styles.objectContainer} edges={[]}>
           <View style={styles.row} edges={[]}>
@@ -346,5 +350,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 5,
     backgroundColor: "#392A1D",
+  },
+  profileImage: {
+    height: 50,
+    width: 50,
+    marginRight: 30,
+    borderRadius: 30,
   },
 });

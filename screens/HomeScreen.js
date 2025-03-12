@@ -85,14 +85,15 @@ export default function HomeScreen({ navigation }) {
           resizeMode="contain"
         />
         <View style={styles.profileContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
           {profileImage ? (
             <Image source={{ uri: profileImage }} style={styles.profileImage} />
           ) : (
             <Image
-              source={require("../assets/placeholder.png")}
               style={styles.profileImage}
             />
           )}
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.carouselcontainer}>
@@ -321,10 +322,10 @@ const styles = StyleSheet.create({
     height: 100,
   },
   profileImage: {
-    height: 80,
-    width: 80,
+    height: 50,
+    width: 50,
     marginRight: 30,
-    borderRadius: 20,
+    borderRadius: 30,
   },
   buttonContent: {
     flexDirection: "row",

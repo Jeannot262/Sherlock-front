@@ -24,7 +24,7 @@ export default function LoginScreen({ navigation }) {
   };
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
     });
@@ -98,7 +98,7 @@ export default function LoginScreen({ navigation }) {
         {/* Bouton Home */}
         <TouchableOpacity
           style={styles.homeButton}
-          onPress={() => navigation.goBack("Home")}>
+          onPress={() => navigation.navigate("Home")}>
           <Text style={styles.buttonHome}>Home</Text>
         </TouchableOpacity>
 
@@ -111,7 +111,7 @@ export default function LoginScreen({ navigation }) {
         {/* Bouton Modifier le mot de passe */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("")}>
+          onPress={() => navigation.navigate("Login")}>
           <Text style={styles.buttonModifier}>Modifier votre mot de passe</Text>
         </TouchableOpacity>
 

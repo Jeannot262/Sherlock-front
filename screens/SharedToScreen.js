@@ -21,6 +21,7 @@ import { updateSharedWithUser } from "../reducers/sharedWithUser";
 
     const user = useSelector(state => state.user.value.username);
     const [searchedUser, setSearchedUser] = useState("");
+    const profileImage = useSelector((state) => state.user.value.profileImage);
 
     const validateButtonPressed = () => {
         if(searchedUser !== user)
@@ -53,12 +54,16 @@ import { updateSharedWithUser } from "../reducers/sharedWithUser";
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
           />
-          <TouchableOpacity
-          style={styles.accountButton}
-          onPress={() => navigation.navigate("Account")}
-          activeOpacity={0.8}>
-            <Text style={styles.textButton}>Profile</Text>
-          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+        {profileImage ? (
+          <Image
+            source={{ uri: profileImage }}
+            style={styles.profileImage}
+          />
+        ) : (
+          <Image style={styles.profileImage} />
+        )}
+      </TouchableOpacity>
         </View>
         <View style={styles.body}>
             <Text style={styles.title}>Avec qui voulez-vous partager vos objets?</Text>
@@ -199,6 +204,12 @@ import { updateSharedWithUser } from "../reducers/sharedWithUser";
       height: 65,
       marginTop: 20,
       backgroundColor: "#392A1D",
+    },
+    profileImage: {
+      height: 50,
+      width: 50,
+      marginRight: 30,
+      borderRadius: 30,
     },
   });
   

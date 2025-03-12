@@ -21,12 +21,14 @@ export default function NewObjectScreen({ navigation }) {
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user.value);
   const object = useSelector((state) => state.objectList.value.object);
+  const profileImage = useSelector((state) => state.user.value.profileImage);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loaned, setLoaned] = useState(false);
   const [loanedTo, setLoanedTo] = useState("");
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     dispatch(resetObject());
@@ -72,13 +74,16 @@ export default function NewObjectScreen({ navigation }) {
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
           />
-          <TouchableOpacity
-            style={styles.accountButton}
-            onPress={() => navigation.navigate("Account")}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButton}>Profile</Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+              {profileImage ? (
+                <Image
+                  source={{ uri: profileImage }}
+                  style={styles.profileImage}
+                />
+             ) : (
+                <Image style={styles.profileImage} />
+               )}
+             </TouchableOpacity>
         </View>
         <View style={styles.objectContainer} edges={[]}>
           <View style={styles.row} edges={[]}>
@@ -341,5 +346,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 5,
     backgroundColor: "#392A1D",
+  },
+  profileImage: {
+    height: 50,
+    width: 50,
+    marginRight: 30,
+    borderRadius: 30,
   },
 });
