@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { Button, Provider } from "@ant-design/react-native";
 //import Toast from "react-native-simple-toast";
 import React, { useState } from "react";
@@ -9,7 +16,7 @@ import { createObjectList } from "../reducers/objectList";
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
 
-  const user = useSelector(state => state.user.value);
+  const user = useSelector((state) => state.user.value);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,14 +40,12 @@ export default function LoginScreen({ navigation }) {
               username: data.connectedUser.username,
               password: password,
             })
-          )
-            setUsername("");
-            setPassword("");
-            //navigation.navigate("TabNavigator");
-            navigation.navigate("Loading");
-        } 
-        else 
-        {
+          );
+          setUsername("");
+          setPassword("");
+          //navigation.navigate("TabNavigator");
+          navigation.navigate("Loading");
+        } else {
           //showToast();
           console.log("Something went wrong!");
         }

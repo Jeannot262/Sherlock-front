@@ -2,26 +2,29 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   Image,
   TouchableOpacity,
   Modal,
+  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 
-
-export default function LoginScreen({ navigation }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function AccountScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const dispatch = useDispatch()
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
 
   const handleLogin = () => {
     navigation.navigate("Home");
   };
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -35,7 +38,41 @@ export default function LoginScreen({ navigation }) {
       dispatch(updateUser({ profileImage: selectedImageUri }));
     }
   };
-    
+
+  // Fonction pour gérer le changement de mot de passe
+  const handleChangePassword = () => {
+    if (newPassword !== confirmPassword) {
+      console.log("Les nouveaux mots de passe ne correspondent pas");
+      return;
+    }
+
+    // Appel à la route pour changer le mot de passe
+    fetch(
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/changePassword`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: user.username,
+          oldPassword: oldPassword,
+          newPassword: newPassword,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          console.log("Mot de passe modifié avec succès");
+          setOldPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
+          setPasswordModalVisible(false);
+        } else {
+          console.log("Erreur lors de la modification du mot de passe");
+        }
+      });
+  };
+
   return (
     <View style={styles.container}>
       {/* Image du titre */}
@@ -71,21 +108,21 @@ export default function LoginScreen({ navigation }) {
             {/* Items du menu */}
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => navigation.goBack("NewObject")}
+              onPress={() => navigation.navigate("NewObject")}
             >
               <Text style={styles.menuItemText}>Nouvel objet</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => navigation.goBack("")}
+              onPress={() => navigation.navigate("")}
             >
               <Text style={styles.menuItemText}>Mes prêts</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => navigation.goBack("MyObjects")}
+              onPress={() => navigation.navigate("Mes Objets")}
             >
               <Text style={styles.menuItemText}>Mes objets</Text>
             </TouchableOpacity>
@@ -98,44 +135,97 @@ export default function LoginScreen({ navigation }) {
         {/* Bouton Home */}
         <TouchableOpacity
           style={styles.homeButton}
-          onPress={() => navigation.navigate("Home")}>
+          onPress={() => navigation.navigate("Home")}
+        >
           <Text style={styles.buttonHome}>Home</Text>
         </TouchableOpacity>
+        <View>
+          <Text style={styles.username}>{user.username}</Text>
+        </View>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={pickImage}>
+        <TouchableOpacity style={styles.button} onPress={pickImage}>
           <Text style={styles.buttonPhoto}>Modifier votre photo de profil</Text>
         </TouchableOpacity>
 
         {/* Bouton Modifier le mot de passe */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Login")}>
+          onPress={() => setPasswordModalVisible(true)}
+        >
           <Text style={styles.buttonModifier}>Modifier votre mot de passe</Text>
         </TouchableOpacity>
 
         {/* Bouton Modifier la langue */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("")}>
+          onPress={() => navigation.navigate("")}
+        >
           <Text style={styles.buttonModifier}>Modifier la langue</Text>
         </TouchableOpacity>
 
         {/* Bouton Supprimer le compte */}
         <TouchableOpacity
           style={styles.suppbutton}
-          onPress={() => navigation.navigate("First")}>
+          onPress={() => navigation.navigate("First")}
+        >
           <Text style={styles.buttonModifier}>Supprimer le compte</Text>
         </TouchableOpacity>
 
         {/* Bouton Retour */}
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}>
+          onPress={() => navigation.goBack()}
+        >
           <Text style={styles.buttonRetour}>Retour</Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={passwordModalVisible}
+        onRequestClose={() => setPasswordModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>
+              {user.username} Changer le mot de passe
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ancien mot de passe"
+              secureTextEntry
+              value={oldPassword}
+              onChangeText={setOldPassword}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Nouveau mot de passe"
+              secureTextEntry
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirmer le nouveau mot de passe"
+              secureTextEntry
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={handleChangePassword}
+            >
+              <Text style={styles.modalButtonText}>Valider</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setPasswordModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -191,20 +281,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   username: {
-    textAlign: "left",
-    backgroundColor: "#ffff",
-    borderRadius: 10,
-    width: "87%",
-    paddingTop: 20,
     marginBottom: 20,
-  },
-  password: {
-    textAlign: "left",
-    backgroundColor: "#ffff",
-    borderRadius: 10,
-    width: "87%",
-    paddingTop: 20,
-    marginBottom: 20,
+    fontSize: 30,
+    fontWeight: "bold",
   },
   squareContainer: {
     backgroundColor: "#8D6C50",
@@ -265,5 +344,43 @@ const styles = StyleSheet.create({
     height: 50,
     fontWeight: "600",
     fontSize: 20,
-  }
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "80%",
+    backgroundColor: "#E9B78E",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  input: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  modalButton: {
+    backgroundColor: "#392A1D",
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+  modalButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
 });
