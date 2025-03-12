@@ -10,25 +10,47 @@ import {
 import { Button } from "@ant-design/react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateObjectList } from "../reducers/objectList";
+import { useIsFocused } from "@react-navigation/native";
+import { createObjectList, updateObjectList } from "../reducers/objectList";
+
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function SharedScreen({ navigation }) {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  const user = useSelector(state => state.user.value);
   const objectList = useSelector((state) => state.objectList.value.list);
   const object = useSelector(state => state.objectList.value.object);
   const shareWith = useSelector(state => state.sharedWithUser.value);
   const profileImage = useSelector((state) => state.user.value.profileImage);
+
+  useEffect(() => {
+    fetch(
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findUserObject/${user._id}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+      if (data.result) {
+        dispatch(createObjectList(data.objectList.objects));
+      } else {
+        console.log("ERROR");
+      }
+    });
+  }, [isFocused]);
   
   let objectsDisplayed;
     if (objectList !== null) {
       objectsDisplayed = objectList.map((data, i) => {
+        let selected = false;
         return (
           <TouchableOpacity
             key={i}
-            style={styles.objectContainer}
+            style={selected ? selectedObjectContainer : styles.objectContainer}
             onPress={() => {
+              selected = !selected;
               dispatch(
                 updateObjectList({
                   _id: data._id,
@@ -48,7 +70,8 @@ export default function SharedScreen({ navigation }) {
                 {data.description.length >= 23 ? data.description.slice(0, 23) + "..." : data.description}
               </Text>
             </View>
-            <Image style={styles.image} source={{ uri: data.picture }} />
+            {data.picture === null ? <FontAwesome name="camera-retro" size={60} color="#E9B78E" style={styles.pictureIcon}/> : 
+            <Image style={styles.image} source={{ uri: data.picture }} />}
             {data.sharedWith !== "" && (
               <Image
                 style={styles.hat}
@@ -125,15 +148,18 @@ export default function SharedScreen({ navigation }) {
         source={require("../assets/black-hat.png")}
         resizeMode="center"
       />
-      <View style={styles.searchContainer}>
+      {/* <View style={styles.searchContainer}>
         <TextInput style={styles.input} placeholder="Rechercher" />
-      </View>
+      </View> */}
       <SafeAreaView style={styles.objectPanel}>
         <ScrollView showsVerticalScrollIndicator={true}>
           {objectsDisplayed}
         </ScrollView>
       </SafeAreaView>
       <View style={styles.bottomBar}>
+        <Button style={styles.backButton} onPress={() => navigation.navigate("TabNavigator", {screen : "Partager"})}>
+          <FontAwesome name='arrow-left' size={25} color="white"/>
+        </Button>
         <Button
         style={styles.addButton}
         onPress={() => validateButtonClicked()}>
@@ -187,10 +213,9 @@ const styles = StyleSheet.create({
   title: {
     color: "black",
     fontSize: 25,
-    fontWeight: "odor",
     marginBottom: 20,
     textAlign: "center",
-    fontWeight: "bold",
+    fontWeight: 800,
   },
   resultTitle: {
     color: "white",
@@ -262,6 +287,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
+  pictureIcon : {
+    position : "absolute",
+    marginLeft : 260,
+    marginTop : 50
+  },
+
   image: {
     position: "absolute",
     width: 120,
@@ -317,15 +348,24 @@ const styles = StyleSheet.create({
   },
 
   bottomBar: {
-    flexDirection: "row-reverse",
+    flexDirection: "row",
     width: "100%",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
   },
 
   addButton: {
     width: 300,
     height: 70,
     marginTop: 20,
+    marginRight : 10,
+    backgroundColor: "#392A1D",
+  },
+
+  backButton: {
+    width: 70,
+    height: 70,
+    marginTop: 20,
+    marginLeft: 5,
     backgroundColor: "#392A1D",
   },
   profileImage: {

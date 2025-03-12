@@ -60,6 +60,7 @@ export default function NewObjectScreen({ navigation }) {
         if (data.result) {
           console.log(data.newObject);
           dispatch(addObject(data.newObject));
+          navigation.navigate("TabNavigator", {screen : "Mes Objets"})
         } else {
           console.log("Something went wrong!");
         }
@@ -102,18 +103,12 @@ export default function NewObjectScreen({ navigation }) {
               style={styles.imageContainer}
               onPress={() => navigation.navigate("CameraScreen")}
             >
-              {loading ? 
-                <ActivityIndicator
-                  size="large"
-                  color="white"
-                  style={styles.loader}
-                /> : 
-                object.picture === null ? <></> : 
+              {object.picture === null ? 
+                <FontAwesome name="camera-retro" size={70} color="#E9B78E"/> :  
                 <Image
                   style={styles.image}
                   source={{ uri: object.picture }}
-                  onLoadStart={() => setLoading(true)}
-                  onLoadEnd={() => setLoading(false)}
+                  onLoad={() => setLoading(false)}
                 />
               }
             </TouchableOpacity>
@@ -304,7 +299,7 @@ const styles = StyleSheet.create({
     height: 185,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "white",
+    borderColor: "#E9B78E",
     marginVertical: 30,
     justifyContent: "center",
     alignItems: "center",

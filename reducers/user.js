@@ -18,10 +18,17 @@ export const userSlice = createSlice({
             state.value.username = action.payload.username;
             state.value.password = action.payload.password;
             state.value.profileImage = action.payload.profileImage;
-            console.log(state.value._id);
+            console.log(state.value);
         },
+        resetUser : (state) => {
+            state.value._id = null;
+            state.value.username = null;
+            state.value.password = null;
+            state.value.profileImage = null;
+            console.log(state.value);
+        }
     }
 });
 
-export const { updateUser } = userSlice.actions;
+export const { updateUser, resetUser } = userSlice.actions;
 export default userSlice.reducer;

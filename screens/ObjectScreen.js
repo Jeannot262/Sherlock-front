@@ -10,21 +10,31 @@ import {
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {Button, Toast} from "@ant-design/react-native";
 import { updateObjectList } from "../reducers/objectList";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function ObjectScreen({ navigation }) {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  const userID = useSelector(state => state.user.value._id);
   const object = useSelector((state) => state.objectList.value.object);
   const objectPicture = object.picture;
+
   const [name, setName] = useState(object.name);
   const [description, setDescription] = useState(object.description);
   const [loaned, setLoaned] = useState(object.loanedTo !== "" ? true : false);
   const [loanedTo, setLoanedTo] = useState(object.loanedTo);
   const [loading, setLoading] = useState(false);
   const profileImage = useSelector((state) => state.user.value.profileImage);
+  const [isOwner, setIsOwner] = useState(true);
+
+  useEffect(() => {
+    userID !== object.owner ? setIsOwner(false) : setIsOwner(true);
+  }, [isFocused])
 
   const showUpdateToast = () => {
     //Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
@@ -42,32 +52,41 @@ export default function ObjectScreen({ navigation }) {
   };
 
   const validateButtonPressed = () => {
-    fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/updateObject/${object.owner}/${object._id}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name,
-          picture: objectPicture,
-          description: description,
-          loanedTo: loanedTo,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          //showUpdateToast();
-          Toast.show({content : "Objet Modifié!", position : "top"});
-          dispatch(updateObjectList(data.object));
-        } else {
-          //showErrorToast();
-          Toast.show({content : "Donnez un nom et une description à votre objet!", position : "top"});
-          console.log(data.error);
+    if(isOwner)
+    {
+      fetch(
+        `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/updateObject/${object.owner}/${object._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name,
+            picture: objectPicture,
+            description: description,
+            loanedTo: loanedTo,
+          }),
         }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            //showUpdateToast();
+            Toast.show({content : "Objet Modifié!", position : "top"});
+            dispatch(updateObjectList(data.object));
+            navigation.navigate("TabNavigator", {screen : "Mes Objets"});
+          } else {
+            //showErrorToast();
+            Toast.show({content : "Donnez un nom et une description à votre objet!", position : "top"});
+            console.log(data.error);
+          }
       });
     }
+    else
+    {
+      console.log("You cannot modify this object!")
+      return;
+    }
+  }
   return (
     <>
       <View style={styles.container}>
@@ -91,8 +110,9 @@ export default function ObjectScreen({ navigation }) {
           <View style={styles.row} edges={[]}>
             <Text style={styles.text}>Nom</Text>
             <TextInput
+              editable={isOwner}
               style={styles.nameInput}
-              placeholder="Nouvel Objet"
+              placeholder="Nommez votre Objet"
               placeholderTextColor="grey"
               onChangeText={(e) => setName(e)}
               value={name}
@@ -102,26 +122,22 @@ export default function ObjectScreen({ navigation }) {
             <Text style={styles.text}>Photo</Text>
             <TouchableOpacity
               style={styles.imageContainer}
-              onPress={() => navigation.navigate("CameraScreen")}
+              onPress={() => isOwner ? navigation.navigate("CameraScreen") : {}}
             >
-              {loading && (
-                <ActivityIndicator
-                  size="large"
-                  color="white"
-                  style={styles.loader}
+              {object.picture === null ? 
+                <FontAwesome name="camera-retro" size={70} color="#E9B78E"/> :  
+                <Image
+                  style={styles.image}
+                  source={ object.picture ? {uri : object.picture} : null }
+                  onLoad={() => setLoading(false)}
                 />
-              )}
-              <Image
-                style={styles.image}
-                source={{ uri: objectPicture }}
-                onLoadStart={() => setLoading(true)}
-                onLoadEnd={() => setLoading(false)}
-              />
+              }
             </TouchableOpacity>
           </View>
           <View style={styles.column} edges={[]}>
             <Text style={styles.text}>Description</Text>
             <TextInput
+              editable={isOwner}
               style={styles.descriptionInput}
               placeholder="Où est situé l'objet?"
               placeholderTextColor="grey"
@@ -143,6 +159,7 @@ export default function ObjectScreen({ navigation }) {
                 }
               />
               <Switch
+                disabled = {!isOwner}
                 trackColor={{ false: "grey", true: "#392A1D" }}
                 thumbColor={loaned ? "#E9B78E" : "white"}
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
@@ -153,6 +170,7 @@ export default function ObjectScreen({ navigation }) {
           </SafeAreaProvider>
           {loaned && (
             <TextInput
+              editable={isOwner}
               style={styles.loanInput}
               placeholder="A qui avez-vous prêté l'objet?"
               placeholderTextColor="grey"
@@ -162,7 +180,7 @@ export default function ObjectScreen({ navigation }) {
           )}
         </View>
         <View style={styles.bottomBar} edges={[]}>
-          <Button style={styles.backButton} onPress={() => navigation.navigate("TabNavigator", {screen : "Mes Objets"})}>
+          <Button style={styles.backButton} onPress={() => navigation.goBack()}>
             <FontAwesome name='arrow-left' size={25} color="white"/>
           </Button>
           <Button
@@ -311,8 +329,10 @@ const styles = StyleSheet.create({
     height: 185,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "white",
+    borderColor: "#E9B78E",
     marginVertical: 30,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   image: {
