@@ -11,50 +11,40 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@ant-design/react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createObjectList,
-  updateObjectList,
-  removeObjectFromList,
-} from "../reducers/objectList";
+import { updateObjectList } from "../reducers/objectList";
 
 import { useIsFocused } from "@react-navigation/native";
 
-export default function ObjectListScreen({ navigation }) {
+export default function SharedWithMeScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user.value);
-  const objectList = useSelector((state) => state.objectList.value.list);
+  const [sharedList, setSharedList] = useState([]);
 
   useEffect(() => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findUserObject/${user._id}`
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findSharedObjects/${user.username}`
     )
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(createObjectList(data.objectList.objects));
+          setSharedList(data.sharedList)
         } else {
-          console.log("ERROR");
+          console.log(data.error);
         }
       });
   }, [isFocused]);
 
-  const handleDelete = (objectName) => {
-    fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteObject/${user._id}/${objectName}`,
-      {
-        method: "DELETE",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        data.result && dispatch(removeObjectFromList(objectName));
-      });
-  };
-
   let objectsDisplayed;
-  if (objectList !== null) {
-    objectsDisplayed = objectList.map((data, i) => {
+  if (sharedList.length !== 0) {
+    objectsDisplayed = sharedList.map((data, i) => {
+      const originalOwner = (
+        fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/findUserByID/${data.owner}`)
+        .then(response => response.json())
+        .then(data => {
+          return data.user;
+        })
+      );
       return (
         <TouchableOpacity
           key={i}
@@ -83,14 +73,10 @@ export default function ObjectListScreen({ navigation }) {
           </View>
           {data.picture === null ? <FontAwesome name="camera-retro" size={60} color="#E9B78E" style={styles.pictureIcon}/> : 
           <Image style={styles.image} source={{ uri: data.picture }} />}
-          {data.sharedWith !== "" && (
-            <Image
+          <Image
             style={styles.hat}
             source={require("../assets/black-hat.png")}/>
-          )}
-          {data.sharedWith !== "" && (
-            <Text style={styles.sharedWith}>{data.sharedWith}</Text>
-          )}
+          <Text style={styles.sharedWith}>{originalOwner}</Text>
           {data.loanedTo !== "" && (
             <Image
               style={styles.blackOpacity}
@@ -103,9 +89,6 @@ export default function ObjectListScreen({ navigation }) {
               source={require("../assets/smoking-pipe.png")}
             />
           )}
-          <TouchableOpacity onPress={() => handleDelete(data.name)}>
-            <FontAwesome name="trash-o" size={20} color="white" />
-          </TouchableOpacity>
         </TouchableOpacity>
       );
     });
@@ -113,7 +96,7 @@ export default function ObjectListScreen({ navigation }) {
     objectsDisplayed = (
       <View>
         <Text style={styles.objectName}>
-          You haven't stored any object yet!
+          Aucun partage pour le moment!
         </Text>
       </View>
     );
@@ -136,17 +119,17 @@ export default function ObjectListScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <SafeAreaView style={styles.objectPanel}>
-          <Text style={styles.title}>Mes objets</Text>
+          <Text style={styles.title}>Partagés avec moi</Text>
           <ScrollView showsVerticalScrollIndicator={true}>
             {objectsDisplayed}
           </ScrollView>
         </SafeAreaView>
         <View style={styles.bottomBar}>
           <Button
-            style={styles.addButton}
-            onPress={() => navigation.navigate("NewObject")}
+            style={styles.backButton}
+            onPress={() => navigation.navigate("TabNavigator", {screen : "Home"})}
           >
-            <Text style={styles.objectName}>+</Text>
+            <FontAwesome name='arrow-left' size={25} color="white"/>
           </Button>
         </View>
       </SafeAreaProvider>
@@ -229,10 +212,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
 
-  addButton: {
-    width: 300,
+  backButton: {
+    width: 70,
     height: 70,
     marginTop: 20,
+    marginLeft: 5,
     backgroundColor: "#392A1D",
   },
 

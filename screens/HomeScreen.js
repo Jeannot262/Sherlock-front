@@ -12,8 +12,8 @@ import {
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "../reducers/user";
-import { updateObjectList } from "../reducers/objectList";
+import { resetUser } from "../reducers/user";
+import { updateObjectList, deleteObjectList, resetObject } from "../reducers/objectList";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -50,13 +50,7 @@ export default function HomeScreen({ navigation }) {
   }, [objectList.length]);
 
   const logoutPressed = () => {
-    dispatch(
-      updateUser({
-        _id: null,
-        username: null,
-        password: null,
-      })
-    );
+    dispatch(resetUser(), resetObject(), deleteObjectList());
   };
 
   const navigateToObject = (object) => {
@@ -178,7 +172,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.PartageButton}
-          onPress={() => navigation.navigate("Shared")}
+          onPress={() => navigation.navigate("SharedWithMe")}
           activeOpacity={0.8}
         >
           <View style={styles.buttonContent}>

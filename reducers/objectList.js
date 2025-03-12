@@ -6,7 +6,7 @@ const initialState = {
     object: {
       _id : null,
       name: "",
-      picture: "",
+      picture: null,
       description: "",
       loanedTo: "",
       sharedWith: null,
@@ -21,6 +21,10 @@ export const objectListSlice = createSlice({
   reducers: {
     createObjectList: (state, action) => {
       state.value.list = action.payload;
+      console.log(state.value.list);
+    },
+    deleteObjectList : (state) => {
+      state.value.list = null;
       console.log(state.value.list);
     },
     updateObjectList: (state, action) => {
@@ -47,18 +51,20 @@ export const objectListSlice = createSlice({
       state.value.object = {
         _id : null,
         name: "",
-        picture: "",
+        picture: null,
         description: "",
         loanedTo: "",
         sharedWith: null,
         owner: null,
       }
+      console.log(state.value.object);
     },
   },
 });
 
 export const {
   createObjectList,
+  deleteObjectList,
   updateObjectList,
   addObject,
   addPhoto,

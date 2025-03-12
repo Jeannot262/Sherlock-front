@@ -9,91 +9,112 @@ import {
 } from "react-native";
 import { Button } from "@ant-design/react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-  
-import React, { useState } from "react";
+
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateObjectList } from "../reducers/objectList";
+import { useIsFocused } from "@react-navigation/native";
+import { createObjectList, updateObjectList } from "../reducers/objectList";
+
+import FontAwesome from "react-native-vector-icons/FontAwesome";
   
 export default function CancelShareScreen({ navigation }) {
-    const dispatch = useDispatch();
-    const objectList = useSelector((state) => state.objectList.value.list);
-    const object = useSelector(state => state.objectList.value.object);
-    const sharedObjectList = objectList.filter(e => e.sharedWith !== "");
-    
-    let objectsDisplayed;
-      if (objectList !== null && sharedObjectList !== null) {
-        objectsDisplayed = sharedObjectList.map((data, i) => {
-          return (
-            <TouchableOpacity
-              key={i}
-              style={styles.objectContainer}
-              onPress={() => {
-                dispatch(
-                  updateObjectList({
-                    _id: data._id,
-                    name: data.name,
-                    picture: data.picture,
-                    description: data.description,
-                    loanedTo: data.loanedTo,
-                    sharedWith: data.sharedWith,
-                    owner: data.owner,
-                  }));
-              }}>
-              <View>
-                <Text style={styles.objectName}>
-                  {data.name.length >= 16 ? data.name.slice(0, 16) + "..." : data.name}
-                </Text>
-                <Text style={styles.objectDescription}>
-                  {data.description.length >= 23 ? data.description.slice(0, 23) + "..." : data.description}
-                </Text>
-              </View>
-              <Image style={styles.image} source={{ uri: data.picture }} />
-              <Image style={styles.hat} source={require("../assets/black-hat.png")}/>
-                <Text style={styles.sharedWith}>{data.sharedWith}</Text>
-              {data.loanedTo !== "" && (
-                <Image
-                  style={styles.blackOpacity}
-                  source={require("../assets/blackOpacity.png")}
-                />
-              )}
-              {data.loanedTo !== "" && (
-                <Image
-                  style={styles.pipe}
-                  source={require("../assets/smoking-pipe.png")}
-                />
-              )}
-            </TouchableOpacity>
-          );
-        });
-      } else { 
-        objectsDisplayed = (
-          <View>
-            <Text style={styles.objectName}>You haven't stored any object yet!</Text>
-          </View>
-        );
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  const user = useSelector(state => state.user.value);
+  const objectList = useSelector((state) => state.objectList.value.list);
+  const object = useSelector(state => state.objectList.value.object);
+  const sharedObjectList = objectList.filter(e => e.sharedWith !== "");
+
+  useEffect(() => {
+    fetch(
+      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findUserObject/${user._id}`
+    )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.result) {
+        dispatch(createObjectList(data.objectList.objects));
+      } else {
+        console.log("ERROR");
       }
-  
-    const validateButtonClicked = () => {
-      fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/stopSharing`, {
-        method : "PUT",
-        headers : { "Content-Type" : "application/json"},
-        body : JSON.stringify({name : object.name, owner : object.owner})
-      })
-      .then(response => response.json())
-      .then(data => {
-        if(data.result)
-        {
-          console.log("Sharing cancelled !!", data.update);
-          navigation.navigate("TabNavigator", {screen : "Partager"})
-        }
-        else
-        {
-          console.log("error");
-        }
+    });
+  }, [isFocused]);
+    
+  let objectsDisplayed;
+    if (objectList !== null && sharedObjectList !== null) {
+      objectsDisplayed = sharedObjectList.map((data, i) => {
+      return (
+        <TouchableOpacity
+        key={i}
+        style={styles.objectContainer}
+        onPress={() => {
+          dispatch(
+            updateObjectList({
+              _id: data._id,
+              name: data.name,
+              picture: data.picture,
+              description: data.description,
+              loanedTo: data.loanedTo,
+              sharedWith: data.sharedWith,
+              owner: data.owner,
+            })
+          );
+        }}>
+          <View>
+            <Text style={styles.objectName}>
+              {data.name.length >= 16 ? data.name.slice(0, 16) + "..." : data.name}
+            </Text>
+            <Text style={styles.objectDescription}>
+              {data.description.length >= 23 ? data.description.slice(0, 23) + "..." : data.description}
+            </Text>
+          </View>
+          {data.picture === null ? <FontAwesome name="camera-retro" size={60} color="#E9B78E" style={styles.pictureIcon}/> : 
+          <Image style={styles.image} source={{ uri: data.picture }} />}
+          <Image style={styles.hat} source={require("../assets/black-hat.png")}/>
+          <Text style={styles.sharedWith}>{data.sharedWith}</Text>
+          {data.loanedTo !== "" && (
+            <Image
+            style={styles.blackOpacity}
+            source={require("../assets/blackOpacity.png")}
+            />
+          )}
+          {data.loanedTo !== "" && (
+            <Image
+            style={styles.pipe}
+            source={require("../assets/smoking-pipe.png")}
+            />
+          )}
+        </TouchableOpacity>);
       });
-    };
+    } else { 
+      objectsDisplayed = (
+        <View>
+          <Text style={styles.objectName}>You haven't stored any object yet!</Text>
+        </View>
+    );
+  }
   
-    return (
+  const validateButtonClicked = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/stopSharing`, {
+      method : "PUT",
+      headers : { "Content-Type" : "application/json"},
+      body : JSON.stringify({name : object.name, owner : object.owner})
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.result)
+      {
+        console.log("Sharing cancelled !!", data.update);
+        navigation.navigate("TabNavigator", {screen : "Partager"})
+      }
+      else
+      {
+        console.log("error");
+      }
+    });
+  };
+  
+  return (
       <SafeAreaProvider style={styles.container}>
         <View style={styles.header}>
           <Image
@@ -107,21 +128,26 @@ export default function CancelShareScreen({ navigation }) {
             <Text style={styles.textButton}>Profile</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Quel partage voulez-vous annuler ?</Text>
-        <Image
-          style={styles.imageButton}
-          source={require("../assets/black-hat.png")}
-          resizeMode="center"
-        />
-        <View style={styles.searchContainer}>
-          <TextInput style={styles.input} placeholder="Rechercher" />
+        <View style={styles.body}>
+          <Text style={styles.title}>Quel partage voulez-vous annuler ?</Text>
+          <Image
+            style={styles.imageButton}
+            source={require("../assets/black-hat.png")}
+            resizeMode="center"
+          />
+          {/* <View style={styles.searchContainer}>
+            <TextInput style={styles.input} placeholder="Rechercher" />
+          </View> */}
+          <SafeAreaView style={styles.objectPanel}>
+            <ScrollView showsVerticalScrollIndicator={true}>
+              {objectsDisplayed}
+            </ScrollView>
+          </SafeAreaView>
         </View>
-        <SafeAreaView style={styles.objectPanel}>
-          <ScrollView showsVerticalScrollIndicator={true}>
-            {objectsDisplayed}
-          </ScrollView>
-        </SafeAreaView>
         <View style={styles.bottomBar}>
+           <Button style={styles.backButton} onPress={() => navigation.navigate("TabNavigator", {screen : "Partager"})}>
+              <FontAwesome name='arrow-left' size={25} color="white"/>
+          </Button>
           <Button
           style={styles.addButton}
           onPress={() => validateButtonClicked()}>
@@ -172,38 +198,24 @@ const styles = StyleSheet.create({
       fontWeight: "bold",
     },
   
+    body: {
+      justifyContent : "flex-start",
+      alignItems : "center",
+      width : "100%",
+      height : "70%"
+    },
     title: {
-      color: "black",
-      fontSize: 25,
+      color: "#392A1D",
+      fontSize: 30,
       fontWeight: "odor",
       marginBottom: 20,
       textAlign: "center",
       fontWeight: "bold",
     },
-    resultTitle: {
-      color: "white",
-      fontSize: 25,
-      fontWeight: "odor",
-      marginBottom: 20,
-      textAlign: "center",
-    },
-  
-    searchContainer: {
-      backgroundColor: "white",
-      alignItems: "justify",
-      justifyContent: "center",
-      fontcolor: "white",
-      borderRadius: 20,
-      width: "90%",
-      padding: 10,
-      marginBottom: 20,
-      width: "90%",
-      height: 40,
-    },
   
     objectPanel: {
       width: "98%",
-      height: "45%",
+      height: "65%",
       backgroundColor: "#8c6c51",
       borderRadius: 10,
     },
@@ -305,15 +317,24 @@ const styles = StyleSheet.create({
     },
   
     bottomBar: {
-      flexDirection: "row-reverse",
+      flexDirection: "row",
       width: "100%",
-      justifyContent: "space-around",
+      justifyContent: "space-between",
     },
   
     addButton: {
       width: 300,
       height: 70,
       marginTop: 20,
+      marginRight : 10,
+      backgroundColor: "#392A1D",
+    },
+
+    backButton: {
+      width: 70,
+      height: 70,
+      marginTop: 20,
+      marginLeft: 5,
       backgroundColor: "#392A1D",
     },
 });
