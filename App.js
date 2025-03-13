@@ -25,6 +25,7 @@ import CameraScreen from "./screens/CameraScreen";
 import CancelShareScreen from "./screens/CancelShareScreen";
 import Loading from "./screens/Loading";
 import SharedWithMeScreen from "./screens/SharedWithMeScreen";
+import LoanedListScreen from "./screens/LoanedListScreen";
 
 const store = configureStore({
   reducer: { user, objectList, sharedWithUser },
@@ -82,6 +83,7 @@ export default function App() {
           <Stack.Screen name="CancelShare" component={CancelShareScreen} />
           <Stack.Screen name="Loading" component={Loading}/>
           <Stack.Screen name="SharedWithMe" component={SharedWithMeScreen}/>
+          <Stack.Screen name="LoanedList" component={LoanedListScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
