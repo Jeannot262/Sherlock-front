@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../reducers/user";
 
 export default function AccountScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,16 +28,17 @@ export default function AccountScreen({ navigation }) {
   };
 
   const pickImage = async () => {
+    console.log('clic')
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaType.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
     });
     if (!result.canceled) {
       const selectedImageUri = result.assets[0].uri;
       setProfileImage(selectedImageUri);
-
-      dispatch(updateUser({ profileImage: selectedImageUri }));
+      console.log('image select', selectedImageUri)
+      dispatch(updateUser({profileImage: selectedImageUri}));
     }
   };
 
@@ -146,6 +148,7 @@ export default function AccountScreen({ navigation }) {
           <Text style={styles.username}>{user.username}</Text>
         </View>
 
+        {/* Bouton Modifier la photo */}
         <TouchableOpacity style={styles.button} onPress={pickImage}>
           <Text style={styles.buttonPhoto}>Modifier votre photo de profil</Text>
         </TouchableOpacity>

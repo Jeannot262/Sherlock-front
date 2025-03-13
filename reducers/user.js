@@ -26,7 +26,7 @@ export const userSlice = createSlice({
             state.value.password = null;
             state.value.profileImage = null;
             console.log(state.value);
-        }
+        },
     }
 });
 

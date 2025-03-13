@@ -55,13 +55,15 @@ import { updateSharedWithUser } from "../reducers/sharedWithUser";
             source={require("../assets/SherlockTitre.png")}
           />
           <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-        {profileImage ? (
+            {profileImage ? (
           <Image
             source={{ uri: profileImage }}
             style={styles.profileImage}
           />
         ) : (
-          <Image style={styles.profileImage} />
+          <Image 
+          source={require("../assets/2354573.png")}
+          style={styles.profileImage} />
         )}
       </TouchableOpacity>
         </View>
@@ -116,6 +118,8 @@ import { updateSharedWithUser } from "../reducers/sharedWithUser";
     logo: {
       width: 250,
       height: 100,
+      marginLeft: 60,
+      marginTop: 10,
     },
   
     accountButton: {
@@ -210,6 +214,7 @@ import { updateSharedWithUser } from "../reducers/sharedWithUser";
       width: 50,
       marginRight: 30,
       borderRadius: 30,
+      marginTop: 20,
     },
   });
   
