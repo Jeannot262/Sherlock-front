@@ -20,12 +20,13 @@ const { width: screenWidth } = Dimensions.get("window");
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
-  const profileImage = useSelector((state) => state.user.value.profileImage);
+  const profileImage = user.profileImage
 
-  console.log(
-    "Redux state:",
-    useSelector((state) => state.objectList)
-  );
+  // console.log(
+  //   "Redux state:",
+  //   useSelector((state) => state.objectList)
+  // );
+  console.log('user dans home',user)
   const objectList =
     useSelector((state) => state.objectList?.value?.list) || [];
 
@@ -85,7 +86,7 @@ export default function HomeScreen({ navigation }) {
             <Image source={{ uri: profileImage }} style={styles.profileImage} />
           ) : (
             <Image
-              source={require("../assets/compte-utilisateur-1.png")}
+              source={require("../assets/2354573.png")}
               style={styles.profileImage}
             />
           )}

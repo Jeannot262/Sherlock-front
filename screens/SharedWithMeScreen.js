@@ -20,6 +20,7 @@ export default function SharedWithMeScreen({ navigation }) {
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user.value);
   const [sharedList, setSharedList] = useState([]);
+  const profileImage = useSelector((state) => state.user.value.profileImage);
 
   useEffect(() => {
     fetch(
@@ -110,13 +111,19 @@ export default function SharedWithMeScreen({ navigation }) {
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
           />
-          <TouchableOpacity
-            style={styles.accountButton}
-            onPress={() => navigation.navigate("Account")}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButton}>Profile</Text>
-          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+          {profileImage ? (
+            <Image
+              source={{ uri: profileImage }}
+              style={styles.profileImage}
+            />
+          ) : (
+            <Image 
+              source={require("../assets/2354573.png")}
+              style={styles.profileImage} 
+            />
+          )}
+        </TouchableOpacity>
         </View>
         <SafeAreaView style={styles.objectPanel}>
           <Text style={styles.title}>Partagés avec moi</Text>
@@ -158,6 +165,8 @@ const styles = StyleSheet.create({
   logo: {
     width: 250,
     height: 100,
+    marginLeft: 60,
+    marginTop: 10,
   },
 
   accountButton: {
@@ -288,5 +297,12 @@ const styles = StyleSheet.create({
     fontWeight: 800,
     marginBottom: 10,
     textAlign: "center",
+  },
+  profileImage: {
+    height: 50,
+    width: 50,
+    marginRight: 30,
+    borderRadius: 30,
+    marginTop: 20,
   },
 });
