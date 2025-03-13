@@ -26,8 +26,8 @@ export default function Loading({navigation}) {
                 } 
                 else 
                 {
-                    console.log("ERROR");
-                    navigation.navigate("Login");
+                    console.log(data.error);
+                    navigation.navigate("TabNavigator", {screen : "Home"});
                 }
             }
         );

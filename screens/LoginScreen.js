@@ -11,7 +11,7 @@ import { Button, Provider } from "@ant-design/react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../reducers/user";
-import { createObjectList } from "../reducers/objectList";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -77,12 +77,14 @@ export default function LoginScreen({ navigation }) {
           <Button onPress={() => loginButtonClicked()} style={styles.button}>
             <Text style={styles.buttonConnexion}>Connexion</Text>
           </Button>
-          <TouchableOpacity
+        </View>
+        <View style={styles.bottomBar} edges={[]}>
+          <Button
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={styles.buttonRetour}>Retour</Text>
-          </TouchableOpacity>
+            <FontAwesome name='arrow-left' size={25} color="white"/>
+          </Button>
         </View>
       </View>
     </Provider>
@@ -138,18 +140,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "90%",
     alignItems: "center",
+  },  
+
+  bottomBar: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginLeft : 20,
+    marginTop : 120
   },
+
   backButton: {
-    position: "absolute",
-    bottom: "-70%",
-    left: -10,
+    justifyContent : "center",
+    alignItems : "center",
+    width: 70,
+    height: 70,
+    marginTop: 20,
+    marginLeft: 5,
     backgroundColor: "#392A1D",
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
-  buttonRetour: {
-    color: "#ffffff",
-    fontSize: 18,
+    borderRadius : 10,
   },
 });

@@ -10,6 +10,7 @@ import { Button, Provider, Tooltip } from "@ant-design/react-native";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../reducers/user";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function SignUpScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ export default function SignUpScreen({ navigation }) {
           if (data.result) {
             dispatch(
               updateUser({
+                _id : data.newUser._id,
                 username: data.newUser.username,
                 password: password,
               })
@@ -37,7 +39,7 @@ export default function SignUpScreen({ navigation }) {
             setUsername("");
             setPassword("");
             setConfirmedPassword("");
-            navigation.navigate("Home");
+            navigation.navigate("Loading");
           } else {
             console.log("Something went wrong!");
           }
@@ -79,13 +81,14 @@ export default function SignUpScreen({ navigation }) {
           <Button style={styles.button} onPress={() => signupButtonClicked()}>
             <Text style={styles.buttonConnexion}>Créer un compte</Text>
           </Button>
-
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
+        </View>
+        <View style={styles.bottomBar} edges={[]}>
+          <Button
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
           >
-            <Text style={styles.buttonRetour}>Retour</Text>
-          </TouchableOpacity>
+            <FontAwesome name='arrow-left' size={25} color="white"/>
+          </Button>
         </View>
       </View>
     </Provider>
@@ -141,17 +144,24 @@ const styles = StyleSheet.create({
     width: "90%",
     alignItems: "center",
   },
-  backButton: {
-    position: "absolute",
-    bottom: "-70%",
-    left: -10,
-    backgroundColor: "#392A1D",
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    borderRadius: 10,
+
+  bottomBar: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginLeft : 20,
+    marginTop : 40
   },
-  buttonRetour: {
-    color: "#ffffff",
-    fontSize: 18,
+
+  backButton: {
+    justifyContent : "center",
+    alignItems : "center",
+    width: 70,
+    height: 70,
+    marginTop: 20,
+    marginLeft: 5,
+    backgroundColor: "#392A1D",
+    borderRadius : 10,
   },
 });
