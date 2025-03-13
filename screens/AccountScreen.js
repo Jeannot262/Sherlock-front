@@ -25,7 +25,7 @@ export default function AccountScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const deleteAccountConfirmation = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/deleteAccount/${user.username}`, {
+    fetch(`https://sherlock-backend.vercel.app/users/deleteAccount/${user.username}`, {
       method : "DELETE",
       headers : { "Content-Type": "application/json" },
     })
@@ -34,7 +34,7 @@ export default function AccountScreen({ navigation }) {
       if(data.result)
       {
         console.log(data.update);
-        fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteUserObjects/${user._id}`, {
+        fetch(`https://sherlock-backend.vercel.app/objects/deleteUserObjects/${user._id}`, {
           method : "DELETE",
           headers : { "Content-Type": "application/json" },
         })
@@ -81,7 +81,7 @@ export default function AccountScreen({ navigation }) {
 
     // Appel à la route pour changer le mot de passe
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/changePassword`,
+      `https://sherlock-backend.vercel.app/users/changePassword`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

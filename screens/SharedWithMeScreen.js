@@ -24,7 +24,7 @@ export default function SharedWithMeScreen({ navigation }) {
 
   useEffect(() => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findSharedObjects/${user.username}`
+      `https://sherlock-backend.vercel.app/objects/findSharedObjects/${user.username}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -40,7 +40,7 @@ export default function SharedWithMeScreen({ navigation }) {
   if (sharedList.length !== 0) {
     objectsDisplayed = sharedList.map((data, i) => {
       const originalOwner = (
-        fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/findUserByID/${data.owner}`)
+        fetch(`https://sherlock-backend.vercel.app/users/findUserByID/${data.owner}`)
         .then(response => response.json())
         .then(data => {
           return data.user;

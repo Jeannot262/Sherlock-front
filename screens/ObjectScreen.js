@@ -57,7 +57,7 @@ export default function ObjectScreen({ navigation }) {
   const validateButtonPressed = () => {
     if (isOwner) {
       fetch(
-        `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/updateObject/${object.owner}/${object._id}`,
+        `https://sherlock-backend.vercel.app/objects/updateObject/${object.owner}/${object._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

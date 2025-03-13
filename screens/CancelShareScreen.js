@@ -28,7 +28,7 @@ export default function CancelShareScreen({ navigation }) {
 
   useEffect(() => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findUserObject/${user._id}`
+      `https://sherlock-backend.vercel.app/objects/findUserObject/${user._id}`
     )
     .then((response) => response.json())
     .then((data) => {
@@ -95,7 +95,7 @@ export default function CancelShareScreen({ navigation }) {
   }
   
   const validateButtonClicked = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/stopSharing`, {
+    fetch(`https://sherlock-backend.vercel.app/objects/stopSharing`, {
       method : "PUT",
       headers : { "Content-Type" : "application/json"},
       body : JSON.stringify({name : object.name, owner : object.owner})

@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { addPhoto } from "../reducers/objectList";
 
-const BACKEND_ADDRESS = `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000`;
+const BACKEND_ADDRESS = `https://sherlock-backend.vercel.app`;
 
 export default function CameraScreen() {
   const [permission, setPermission] = useState(false);

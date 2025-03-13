@@ -29,7 +29,7 @@ export default function SharedScreen({ navigation }) {
 
   useEffect(() => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findUserObject/${user._id}`
+      `https://sherlock-backend.vercel.app/objects/findUserObject/${user._id}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -105,7 +105,7 @@ export default function SharedScreen({ navigation }) {
     }
 
   const validateButtonClicked = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/shareWith/${shareWith}`, {
+    fetch(`https://sherlock-backend.vercel.app/objects/shareWith/${shareWith}`, {
       method : "PUT",
       headers : { "Content-Type" : "application/json"},
       body : JSON.stringify({name : object.name, owner : object.owner})

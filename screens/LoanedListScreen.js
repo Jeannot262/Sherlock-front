@@ -33,7 +33,7 @@ export default function LoanedListScreen({ navigation }) {
 
   useEffect(() => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findUserObject/${user._id}`
+      `https://sherlock-backend.vercel.app/objects/findUserObject/${user._id}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -47,7 +47,7 @@ export default function LoanedListScreen({ navigation }) {
 
   const handleDelete = (objectName) => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteObject/${user._id}/${objectName}`,
+      `https://sherlock-backend.vercel.app/objects/deleteObject/${user._id}/${objectName}`,
       {
         method: "DELETE",
       }

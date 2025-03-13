@@ -26,7 +26,7 @@ export default function LoginScreen({ navigation }) {
   // };
 
   const loginButtonClicked = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/login`, {
+    fetch(`https://sherlock-backend.vercel.app/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: username, password: password }),

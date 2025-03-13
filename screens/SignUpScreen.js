@@ -21,7 +21,7 @@ export default function SignUpScreen({ navigation }) {
 
   const signupButtonClicked = () => {
     if (password === confirmedPassword) {
-      fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/signup`, {
+      fetch(`https://sherlock-backend.vercel.app/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: username, password: password }),

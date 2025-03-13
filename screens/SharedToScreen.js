@@ -26,7 +26,7 @@ import { updateSharedWithUser } from "../reducers/sharedWithUser";
     const validateButtonPressed = () => {
         if(searchedUser !== user)
         {
-            fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/findUser/${searchedUser}`)
+            fetch(`https://sherlock-backend.vercel.app/users/findUser/${searchedUser}`)
             .then(response => response.json())
             .then(data => {
                 if(data.result)

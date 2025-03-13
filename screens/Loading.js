@@ -17,7 +17,7 @@ export default function Loading({navigation}) {
     const user = useSelector((state) => state.user.value);
 
     useEffect(() => {
-        fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/findUserObject/${user._id}`)
+        fetch(`https://sherlock-backend.vercel.app/objects/findUserObject/${user._id}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) {

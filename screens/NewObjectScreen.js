@@ -42,7 +42,7 @@ export default function NewObjectScreen({ navigation }) {
 
   const addNewObject = () => {
     fetch(
-      `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/addObject`,
+      `https://sherlock-backend.vercel.app/objects/addObject`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
