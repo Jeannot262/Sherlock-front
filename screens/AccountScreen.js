@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -74,7 +75,7 @@ export default function AccountScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Image du titre */}
       <Image
         style={styles.image}
@@ -228,7 +229,7 @@ export default function AccountScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -295,14 +296,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 50,
   },
-  // backbutton: {
-  //   bottom: "-40%",
-  //   right: 130,
-  //   backgroundColor: "#392A1D",
-  //   paddingHorizontal: 5,
-  //   paddingVertical: 10,
-  //   borderRadius: 10,
-  //    },
+  backButton: {
+    bottom: "-35%",
+    right: 130,
+    backgroundColor: "#392A1D",
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
   buttonRetour: {
     color: "#ffffff",
     fontSize: 18,

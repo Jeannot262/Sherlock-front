@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     margin: 10,
     marginBottom: 20,
     marginTop: 10,
-    height: 90,
+    height: 80,
   },
 
   textButton: {
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 8,
     margin: 10,
-    height: 100,
+    height: 80,
   },
   profileImage: {
     height: 50,

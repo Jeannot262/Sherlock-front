@@ -7,7 +7,6 @@ import {
   TextInput,
   View,
   ActivityIndicator,
-  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -295,7 +294,7 @@ const styles = StyleSheet.create({
     height: "75%",
     fontWeight: "500",
     color: "#392A1D",
-    fontSize: 20,
+    fontSize: 15,
     backgroundColor: "white",
     borderRadius: 10,
   },
