@@ -13,7 +13,11 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { resetUser } from "../reducers/user";
-import { updateObjectList, deleteObjectList, resetObject } from "../reducers/objectList";
+import {
+  updateObjectList,
+  deleteObjectList,
+  resetObject,
+} from "../reducers/objectList";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -81,14 +85,17 @@ export default function HomeScreen({ navigation }) {
         />
         <View style={styles.profileContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-          {profileImage ? (
-            <Image source={{ uri: profileImage }} style={styles.profileImage} />
-          ) : (
-            <Image
-              source={require("../assets/compte-utilisateur-1.png")}
-              style={styles.profileImage}
-            />
-          )}
+            {profileImage ? (
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <Image
+                source={require("../assets/compte-utilisateur-1.png")}
+                style={styles.profileImage}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -153,13 +160,13 @@ export default function HomeScreen({ navigation }) {
         )}
       </View>
       <View style={styles.buttoncontainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("MyObjects")}
+          onPress={() => navigation.navigate("Mes Objets")}
           activeOpacity={0.8}
         >
           <Text style={styles.textButton}>Mes objets</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Shared")}
@@ -239,14 +246,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   carouselcontainer: {
-    height: 220,
+    height: 400,
     width: "90%",
     backgroundColor: "#9E6D52",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
     borderRadius: 10,
-    paddingTop: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   carouselItem: {
     width: screenWidth * 0.7,
@@ -258,7 +266,7 @@ const styles = StyleSheet.create({
   },
   carouselImage: {
     width: "90%",
-    height: 150,
+    height: 320,
     borderRadius: 10,
   },
   container: {

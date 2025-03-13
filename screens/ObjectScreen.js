@@ -7,12 +7,13 @@ import {
   TextInput,
   View,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {Button, Toast} from "@ant-design/react-native";
+import { Button, Toast } from "@ant-design/react-native";
 import { updateObjectList } from "../reducers/objectList";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -20,7 +21,7 @@ export default function ObjectScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
-  const userID = useSelector(state => state.user.value._id);
+  const userID = useSelector((state) => state.user.value._id);
   const object = useSelector((state) => state.objectList.value.object);
   const objectPicture = object.picture;
 
@@ -34,16 +35,19 @@ export default function ObjectScreen({ navigation }) {
 
   useEffect(() => {
     userID !== object.owner ? setIsOwner(false) : setIsOwner(true);
-  }, [isFocused])
+  }, [isFocused]);
 
   const showUpdateToast = () => {
     //Toast.show("Objet Modifié!", Toast.SHORT, Toast.CENTER);
-    Toast.show({content : "Objet Modifié!", position : "top"});
+    Toast.show({ content: "Objet Modifié!", position: "top" });
   };
 
   const showErrorToast = () => {
     //Toast.show("Donnez un nom et une description à votre objet!", Toast.SHORT, Toast.CENTER);
-    Toast.show({content : "Donnez un nom et une description à votre objet!", position : "top"});
+    Toast.show({
+      content: "Donnez un nom et une description à votre objet!",
+      position: "top",
+    });
   };
 
   const loanSwitch = () => {
@@ -52,8 +56,7 @@ export default function ObjectScreen({ navigation }) {
   };
 
   const validateButtonPressed = () => {
-    if(isOwner)
-    {
+    if (isOwner) {
       fetch(
         `http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/updateObject/${object.owner}/${object._id}`,
         {
@@ -71,22 +74,23 @@ export default function ObjectScreen({ navigation }) {
         .then((data) => {
           if (data.result) {
             //showUpdateToast();
-            Toast.show({content : "Objet Modifié!", position : "top"});
+            Toast.show({ content: "Objet Modifié!", position: "top" });
             dispatch(updateObjectList(data.object));
-            navigation.navigate("TabNavigator", {screen : "Mes Objets"});
+            navigation.navigate("TabNavigator", { screen: "Mes Objets" });
           } else {
             //showErrorToast();
-            Toast.show({content : "Donnez un nom et une description à votre objet!", position : "top"});
+            Toast.show({
+              content: "Donnez un nom et une description à votre objet!",
+              position: "top",
+            });
             console.log(data.error);
           }
-      });
-    }
-    else
-    {
-      console.log("You cannot modify this object!")
+        });
+    } else {
+      console.log("You cannot modify this object!");
       return;
     }
-  }
+  };
   return (
     <>
       <View style={styles.container}>
@@ -95,16 +99,16 @@ export default function ObjectScreen({ navigation }) {
             style={styles.logo}
             source={require("../assets/SherlockTitre.png")}
           />
-            <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-        {profileImage ? (
-          <Image
-            source={{ uri: profileImage }}
-            style={styles.profileImage}
-          />
-        ) : (
-          <Image style={styles.profileImage} />
-        )}
-      </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+            {profileImage ? (
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <Image style={styles.profileImage} />
+            )}
+          </TouchableOpacity>
         </View>
         <View style={styles.objectContainer} edges={[]}>
           <View style={styles.row} edges={[]}>
@@ -122,16 +126,19 @@ export default function ObjectScreen({ navigation }) {
             <Text style={styles.text}>Photo</Text>
             <TouchableOpacity
               style={styles.imageContainer}
-              onPress={() => isOwner ? navigation.navigate("CameraScreen") : {}}
+              onPress={() =>
+                isOwner ? navigation.navigate("CameraScreen") : {}
+              }
             >
-              {object.picture === null ? 
-                <FontAwesome name="camera-retro" size={70} color="#E9B78E"/> :  
+              {object.picture === null ? (
+                <FontAwesome name="camera-retro" size={70} color="#E9B78E" />
+              ) : (
                 <Image
                   style={styles.image}
-                  source={ object.picture ? {uri : object.picture} : null }
+                  source={object.picture ? { uri: object.picture } : null}
                   onLoad={() => setLoading(false)}
                 />
-              }
+              )}
             </TouchableOpacity>
           </View>
           <View style={styles.column} edges={[]}>
@@ -159,7 +166,7 @@ export default function ObjectScreen({ navigation }) {
                 }
               />
               <Switch
-                disabled = {!isOwner}
+                disabled={!isOwner}
                 trackColor={{ false: "grey", true: "#392A1D" }}
                 thumbColor={loaned ? "#E9B78E" : "white"}
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
@@ -181,7 +188,7 @@ export default function ObjectScreen({ navigation }) {
         </View>
         <View style={styles.bottomBar} edges={[]}>
           <Button style={styles.backButton} onPress={() => navigation.goBack()}>
-            <FontAwesome name='arrow-left' size={25} color="white"/>
+            <FontAwesome name="arrow-left" size={25} color="white" />
           </Button>
           <Button
             style={styles.validateButton}
@@ -288,7 +295,7 @@ const styles = StyleSheet.create({
     height: "75%",
     fontWeight: "500",
     color: "#392A1D",
-    fontSize: 15,
+    fontSize: 20,
     backgroundColor: "white",
     borderRadius: 10,
   },

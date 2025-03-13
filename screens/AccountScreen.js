@@ -122,7 +122,9 @@ export default function AccountScreen({ navigation }) {
 
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => navigation.navigate("Mes Objets")}
+              onPress={() =>
+                navigation.navigate("TabNavigator", { screen: "Home" })
+              }
             >
               <Text style={styles.menuItemText}>Mes objets</Text>
             </TouchableOpacity>
@@ -293,14 +295,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 50,
   },
-  backButton: {
-    bottom: "-40%",
-    right: 130,
-    backgroundColor: "#392A1D",
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
+  // backbutton: {
+  //   bottom: "-40%",
+  //   right: 130,
+  //   backgroundColor: "#392A1D",
+  //   paddingHorizontal: 5,
+  //   paddingVertical: 10,
+  //   borderRadius: 10,
+  //    },
   buttonRetour: {
     color: "#ffffff",
     fontSize: 18,
