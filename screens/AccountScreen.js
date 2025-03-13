@@ -278,6 +278,7 @@ export default function AccountScreen({ navigation }) {
           </View>
         </View>
       </Modal>
+      {deleteAccountModal}
     </SafeAreaView>
   );
 }
