@@ -20,11 +20,41 @@ export default function AccountScreen({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
 
-  const handleLogin = () => {
-    navigation.navigate("Home");
+  const deleteAccountConfirmation = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/users/deleteAccount/${user.username}`, {
+      method : "DELETE",
+      headers : { "Content-Type": "application/json" },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.result)
+      {
+        console.log(data.update);
+        fetch(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:3000/objects/deleteUserObjects/${user._id}`, {
+          method : "DELETE",
+          headers : { "Content-Type": "application/json" },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.result)
+          {
+            console.log(data.update);
+          }
+          else
+          {
+            console.log(data.error);
+          }
+        });
+        navigation.navigate("First");
+      }
+      else{
+        console.log(data.error);
+      }
+    })
   };
 
   const pickImage = async () => {
@@ -75,6 +105,22 @@ export default function AccountScreen({ navigation }) {
         }
       });
   };
+
+  const setDeleteModal = () => setShowDeleteModal(!showDeleteModal);
+
+  const deleteAccountModal = (
+    <Modal animationType="slide" transparent visible={showDeleteModal}>
+      <View style={styles.deleteModalContent}>
+        <Text style={styles.deleteTitle}>Voulez-vous vraiment supprimer votre compte ?</Text>
+        <TouchableOpacity style={styles.modalButton} onPress={() => deleteAccountConfirmation()}>
+          <Text style={styles.deleteTitle}>Oui</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.modalButton} onPress={() => setDeleteModal()}>
+          <Text style={styles.deleteTitle}>Non</Text>
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -172,7 +218,7 @@ export default function AccountScreen({ navigation }) {
         {/* Bouton Supprimer le compte */}
         <TouchableOpacity
           style={styles.suppbutton}
-          onPress={() => navigation.navigate("First")}
+          onPress={() => setDeleteModal()}
         >
           <Text style={styles.buttonModifier}>Supprimer le compte</Text>
         </TouchableOpacity>
@@ -389,4 +435,18 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
+
+  deleteModalContent : {
+    justifyContent : "center",
+    alignItems : "center",
+    width : "90%",
+    height : "90%",
+    backgroundColor : "black",
+  },
+
+  deleteTitle : {
+    fontSize : 27,
+    fontWeight : 800,
+    color : "white"
+  }
 });

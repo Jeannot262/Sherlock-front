@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   value: {
-    list: null,
+    list: [],
     object: {
       _id : null,
       name: "",
@@ -24,7 +24,7 @@ export const objectListSlice = createSlice({
       console.log(state.value.list);
     },
     deleteObjectList : (state) => {
-      state.value.list = null;
+      state.value.list = [];
       console.log(state.value.list);
     },
     updateObjectList: (state, action) => {

@@ -56,7 +56,9 @@ export default function HomeScreen({ navigation }) {
   }, [objectList.length]);
 
   const logoutPressed = () => {
-    dispatch(resetUser(), resetObject(), deleteObjectList());
+    dispatch(resetObject());
+    dispatch(deleteObjectList());
+    dispatch(resetUser());
   };
 
   const navigateToObject = (object) => {
@@ -157,45 +159,18 @@ export default function HomeScreen({ navigation }) {
           />
         )}
       </View>
-      <View style={styles.buttoncontainer}>
-        {/* <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Mes Objets")}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButton}>Mes objets</Text>
-        </TouchableOpacity> */}
+      <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Shared")}
-          activeOpacity={0.8}
-        >
-          <View style={styles.buttonContent}>
-            <Text style={styles.textButton}>
-              Mes prêts
-              <Image
-                style={styles.imageButton}
-                source={require("../assets/smoking-pipe.png")}
-                resizeMode="center"
-              />
-            </Text>
-          </View>
+          style={styles.loanedButton}
+          onPress={() => navigation.navigate("LoanedList")}>
+          <Text style={styles.textButton}>Mes prêts</Text>
+          <Image style={styles.icon} source={require("../assets/smoking-pipe.png")}/>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.PartageButton}
-          onPress={() => navigation.navigate("SharedWithMe")}
-          activeOpacity={0.8}
-        >
-          <View style={styles.buttonContent}>
-            <Text style={styles.textButton}>
-              Partager avec Watson
-              <Image
-                style={styles.imageButton}
-                source={require("../assets/black-hat.png")}
-                resizeMode="center"
-              />
-            </Text>
-          </View>
+          style={styles.sharedButton}
+          onPress={() => navigation.navigate("SharedWithMe")}>
+          <Text style={styles.textButton}>Partagés avec moi</Text>
+          <Image style={styles.icon} source={require("../assets/black-hat.png")} resizeMode="center"/>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -286,14 +261,17 @@ const styles = StyleSheet.create({
     height: 75,
     marginTop: 10,
   },
-  imageButton: {
-    width: 60,
-    height: 60,
+  icon: {
+    position : "absolute",
+    width: 50,
+    height: 50,
+    marginLeft : 240
   },
-  buttoncontainer: {
+
+  buttonContainer: {
     flex: 1,
     backgroundColor: "#8D6C50",
-    alignItems: "justify",
+    alignItems: "center",
     justifyContent: "center",
     fontcolor: "white",
     borderRadius: 10,
@@ -301,31 +279,31 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
   },
-  button: {
+  loanedButton: {
     backgroundColor: "#392A1D",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
     borderRadius: 10,
     padding: 8,
-    margin: 10,
-    marginBottom: 20,
-    marginTop: 10,
-    height: 80,
+    width : "90%",
+    height: 70,
+  },
+
+  sharedButton: {
+    backgroundColor: "#9F6D52",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    borderRadius: 10,
+    padding: 8,
+    width : "90%",
+    height: 70,
   },
 
   textButton: {
     color: "white",
-    fontSize: 26,
+    fontSize: 25,
     fontWeight: "600",
-  },
-  PartageButton: {
-    backgroundColor: "#9F6D52",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-    padding: 8,
-    margin: 10,
-    height: 80,
+    marginLeft: 10
   },
   profileImage: {
     height: 50,
