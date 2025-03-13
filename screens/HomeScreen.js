@@ -85,6 +85,7 @@ export default function HomeScreen({ navigation }) {
             <Image source={{ uri: profileImage }} style={styles.profileImage} />
           ) : (
             <Image
+              source={require("../assets/compte-utilisateur-1.png")}
               style={styles.profileImage}
             />
           )}
